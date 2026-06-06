@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9dc148c594cfc2f4897da275d1f566ce
+guid: b8052d07e8c4ed544af5b272472306e0
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7417498029127908629
-    second: 002_0
+      213: 5221453301387322276
+    second: lava_blue_small_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  spritePixelsToUnits: 32
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 002_0
+      name: lava_blue_small_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 1837
-        height: 1314
+        width: 96
+        height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 51d345c682f30f660800000000000000
-      internalID: 7417498029127908629
+      spriteID: 4a36b78fc14567840800000000000000
+      internalID: 5221453301387322276
       vertices: []
       indices: 
       edges: []
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      002_0: 7417498029127908629
+      lava_blue_small_0: 5221453301387322276
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
