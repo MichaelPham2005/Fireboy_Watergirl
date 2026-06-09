@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - RedGem
   layers:
   - Default
   - TransparentFX
@@ -41,8 +42,20 @@ TagManager:
   - name: Background
     uniqueID: 3023157139
     locked: 0
+  - name: Wind
+    uniqueID: 2905054953
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Decoration
+    uniqueID: 3371280839
+    locked: 0
+  - name: Lava
+    uniqueID: 2464364901
+    locked: 0
+  - name: GameObject
+    uniqueID: 3281156571
     locked: 0
   m_RenderingLayers:
   - Default

@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 13312, guid: 0000000000000000e000000000000000, type: 0}
-  m_Name: red_gem
+  m_Name: deco_5
   m_EditorClassIdentifier: UnityEngine.dll::UnityEngine.Tilemaps.Tile
-  m_Sprite: {fileID: 545875093725613961, guid: e4cb174be3e39f745bb425a0da80d565, type: 3}
+  m_Sprite: {fileID: 545875093725613961, guid: ceb918156a111cc419c08766d89825b9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
     e00: 1
