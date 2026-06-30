@@ -81,69 +81,82 @@ public class StandardPlayerMovement : MonoBehaviour
 
     private void ApplyMovement(float moveInput)
     {
+        bool onSlope = isGrounded && groundNormal.y < 0.99f && groundNormal.y > 0f;
+
         if (!Mathf.Approximately(moveInput, 0f))
         {
-            if (isGrounded && groundNormal != Vector2.up)
+            if (onSlope)
             {
-                // On a slope: project movement direction along the slope surface
-                // This allows walking UP and DOWN slopes smoothly
                 Vector2 moveDir = new Vector2(moveInput, 0f);
                 Vector2 slopeMove = Vector3.ProjectOnPlane(moveDir, groundNormal).normalized * moveSpeed;
-                // Only override y if moving upward along slope (not fighting gravity when going down)
-                float targetY = (slopeMove.y > 0) ? slopeMove.y : rb.linearVelocity.y;
+                float targetY = (slopeMove.y > 0f) ? slopeMove.y : rb.linearVelocity.y;
                 rb.linearVelocity = new Vector2(slopeMove.x, targetY);
             }
             else
             {
-                // Flat ground or air: simple horizontal override
                 rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
             }
         }
         else if (isGrounded)
         {
-            // No input while grounded: brake to a stop
-            // Use Lerp for smooth deceleration (not instant stop, not sticky)
-            float brakingX = Mathf.MoveTowards(rb.linearVelocity.x, 0f, moveSpeed * 8f * Time.deltaTime);
-            rb.linearVelocity = new Vector2(brakingX, rb.linearVelocity.y);
+            if (!onSlope)
+            {
+                // Brake on flat ground only
+                float brakingX = Mathf.MoveTowards(rb.linearVelocity.x, 0f, moveSpeed * 8f * Time.deltaTime);
+                rb.linearVelocity = new Vector2(brakingX, rb.linearVelocity.y);
+            }
+            // If on a slope and no input, do nothing.
+            // This allows gravity and 0 friction to slide the player down naturally.
         }
-        // Airborne with no input: let physics handle everything (enables slope sliding)
     }
 
     private void UpdateGroundState()
     {
-        // RULE 1: If moving upward significantly, we are NOT grounded.
-        // This is the primary double-jump prevention mechanism.
-        if (rb.linearVelocity.y > 0.0f)
+        // 1. VELOCITY-BASED DOUBLE JUMP PREVENTION
+        // If upward velocity exceeds normal slope walking speeds (e.g. > 5.6), 
+        // the player MUST have jumped. Force isGrounded = false.
+        if (rb.linearVelocity.y > moveSpeed * 0.8f)
         {
             isGrounded = false;
             groundNormal = Vector2.up;
             return;
         }
 
-        // RULE 2: Check contact normals.
-        // Threshold 0.75 means the surface must be within ~41 degrees of horizontal.
-        // A pure vertical wall has normal.y = 0, so it will NEVER pass this check.
-        // This prevents wall-jumping / wall-climbing.
         groundNormal = Vector2.up;
+        bool foundGround = false;
+
+        // 2. CHECK PHYSICS CONTACTS
         int count = rb.GetContacts(contacts);
         for (int i = 0; i < count; i++)
         {
-            if (contacts[i].normal.y > 0.75f)
+            if (contacts[i].normal.y > 0.5f) // Threshold 0.5 allows up to 60-degree slopes
             {
-                isGrounded = true;
+                foundGround = true;
                 groundNormal = contacts[i].normal;
-                return;
+                break;
             }
         }
 
-        // RULE 3: OverlapCircle as a safety fallback
-        if (groundCheck != null && Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer))
+        // 3. OVERLAPCIRCLE FALLBACK (Crucial Fix)
+        // If we still didn't find ground, use the circle check.
+        if (!foundGround && groundCheck != null)
         {
-            isGrounded = true;
-            return;
+            Collider2D[] hits = Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius, groundLayer);
+            foreach (Collider2D hit in hits)
+            {
+                // BUG FIX: Ignore the player's OWN collider!
+                // Previously, the circle was detecting the player's CapsuleCollider 
+                // causing them to ALWAYS be "grounded" even in mid-air.
+                if (hit.gameObject != gameObject && !hit.transform.IsChildOf(transform))
+                {
+                    foundGround = true;
+                    groundNormal = Vector2.up;
+                    break;
+                }
+            }
         }
 
-        isGrounded = false;
+        isGrounded = foundGround;
     }
 
     private float GetHorizontalInput()
