@@ -99,11 +99,6 @@ public class StandardPlayerMovement : MonoBehaviour
                 var headSR = headAnimator.GetComponent<SpriteRenderer>();
                 string spriteName = headSR != null && headSR.sprite != null ? headSR.sprite.name : "NULL";
                 
-                Debug.Log($"[{playerType}] HEAD sprite={spriteName}, " +
-                          $"Speed={headAnimator.GetFloat("Speed"):F2}, " +
-                          $"yVelocity={headAnimator.GetFloat("yVelocity"):F2}, " +
-                          $"IsGrounded={headAnimator.GetBool("IsGrounded")}, " +
-                          $"stateHash={stateInfo.shortNameHash}");
             }
         }
 
