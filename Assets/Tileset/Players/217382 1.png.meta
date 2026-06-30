@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 626475f6d8ebd634ab21c6ea1892fd88
+guid: 91f15e24f56022149ba14d051c2e43c4
 TextureImporter:
   internalIDToNameTable:
   - first:
@@ -1916,7 +1916,7 @@ TextureImporter:
         width: 86
         height: 88
       alignment: 9
-      pivot: {x: 0.5, y: 0.3308175}
+      pivot: {x: 0.5, y: 0.22}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -2114,7 +2114,7 @@ TextureImporter:
         width: 86
         height: 92
       alignment: 9
-      pivot: {x: 0.5, y: 0.29708928}
+      pivot: {x: 0.5, y: 0.22}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -2224,7 +2224,7 @@ TextureImporter:
         width: 86
         height: 94
       alignment: 9
-      pivot: {x: 0.5, y: 0.304881}
+      pivot: {x: 0.5, y: 0.22}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -2246,7 +2246,7 @@ TextureImporter:
         width: 86
         height: 98
       alignment: 9
-      pivot: {x: 0.5, y: 0.3195097}
+      pivot: {x: 0.5, y: 0.22}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
