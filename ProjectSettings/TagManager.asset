@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - RedGem
+  - Fireboy
+  - Watergirl
   layers:
   - Default
   - TransparentFX
