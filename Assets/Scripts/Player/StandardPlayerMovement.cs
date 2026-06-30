@@ -61,19 +61,24 @@ public class StandardPlayerMovement : MonoBehaviour
 
         // Animation
         if (bodyAnimator != null)
+        {
             bodyAnimator.SetFloat("Speed", Mathf.Abs(moveInput));
             bodyAnimator.SetFloat("yVelocity", rb.linearVelocity.y);
             bodyAnimator.SetBool("IsGrounded", isGrounded);
         }
         
         if (headAnimator != null)
+        {
             headAnimator.SetFloat("Speed", Mathf.Abs(moveInput));
             headAnimator.SetFloat("yVelocity", rb.linearVelocity.y);
             headAnimator.SetBool("IsGrounded", isGrounded);
 
             // Smoothly tilt the head based on vertical velocity when in the air
             float targetZRotation = 0f;
-            if (!isGrounded)
+            
+            // ONLY tilt if we have horizontal speed (i.e. moving jump). 
+            // If jumping straight up (Speed < 0.1), keep the head perfectly stable (0 rotation).
+            if (!isGrounded && Mathf.Abs(rb.linearVelocity.x) > 0.1f)
             {
                 // Multiply y velocity to get an angle, clamp it so it doesn't rotate too far
                 targetZRotation = Mathf.Clamp(rb.linearVelocity.y * 2.5f, -35f, 35f);
@@ -100,6 +105,7 @@ public class StandardPlayerMovement : MonoBehaviour
                           $"IsGrounded={headAnimator.GetBool("IsGrounded")}, " +
                           $"stateHash={stateInfo.shortNameHash}");
             }
+        }
 
         // Flip sprite direction
         if (moveInput > 0f)

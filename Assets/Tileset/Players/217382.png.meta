@@ -1908,28 +1908,6 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: 217382_103
-      rect:
-        serializedVersion: 2
-        x: 416
-        y: 751
-        width: 86
-        height: 88
-      alignment: 9
-      pivot: {x: 0.5, y: 0.3308175}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 17cb49ddf9952aa60800000000000000
-      internalID: 7683802457399671921
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
       name: 217382_109
       rect:
         serializedVersion: 2
@@ -2233,28 +2211,6 @@ TextureImporter:
       bones: []
       spriteID: 5e7caa01cb01ce920800000000000000
       internalID: 3020807849978284005
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: 217382_130
-      rect:
-        serializedVersion: 2
-        x: 746
-        y: 609
-        width: 86
-        height: 98
-      alignment: 9
-      pivot: {x: 0.5, y: 0.3195097}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9e6ac786a8a929cb0800000000000000
-      internalID: -4858651128730179863
       vertices: []
       indices: 
       edges: []
@@ -4679,6 +4635,50 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: 217382_0
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 607
+        width: 60
+        height: 86
+      alignment: 9
+      pivot: {x: 0.499999, y: 0.28448558}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6e5be0be28a11e14189fc38c8818fb12
+      internalID: 124979857
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: 217382_1
+      rect:
+        serializedVersion: 2
+        x: 754
+        y: 601
+        width: 71
+        height: 98
+      alignment: 9
+      pivot: {x: 0.5060691, y: 0.3768491}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 58a66a9011cbb594ab39c9fe5b6c5df2
+      internalID: 2111754263
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     customData: 
     physicsShape: []
@@ -4695,6 +4695,8 @@ TextureImporter:
       - key: SpriteEditor.SliceSettings
         value: '{"sliceOnImport":false,"gridCellCount":{"x":1.0,"y":1.0},"gridSpriteSize":{"x":64.0,"y":64.0},"gridSpriteOffset":{"x":0.0,"y":0.0},"gridSpritePadding":{"x":0.0,"y":0.0},"pivot":{"x":0.5,"y":0.2199999988079071},"pivotPixels":{"x":0.0,"y":0.0},"autoSlicingMethod":1,"spriteAlignment":9,"pivotUnitMode":0,"slicingType":0,"keepEmptyRects":false,"isAlternate":false}'
     nameFileIdTable:
+      217382_0: 124979857
+      217382_1: 2111754263
       217382_100: 9135126530328812391
       217382_101: 9155118625478752023
       217382_102: -7250765040985296337
