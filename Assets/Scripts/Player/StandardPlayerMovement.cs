@@ -9,72 +9,64 @@ public class StandardPlayerMovement : MonoBehaviour
 
     [Header("Movement Settings")]
     public float moveSpeed = 7f;
-    public float jumpForce = 12f;
+    public float jumpForce = 16f;
 
     [Header("Components")]
     private Rigidbody2D rb;
-    public Animator bodyAnimator; 
+    private Collider2D col;
+    public Animator bodyAnimator;
     public Animator headAnimator;
 
     [Header("Ground Detection")]
-    public Transform groundCheck; 
+    public Transform groundCheck;
     public float groundCheckRadius = 0.25f;
-    public LayerMask groundLayer; 
+    public LayerMask groundLayer;
     private bool isGrounded;
+
+    // Internal: track the surface normal of what we're standing on
+    private Vector2 groundNormal = Vector2.up;
+    private ContactPoint2D[] contacts = new ContactPoint2D[8];
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
+
         rb.gravityScale = 3f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-        // If groundLayer is set to "Nothing" (0 in int terms), default to "Default"
+        // Fallback: if no ground layer assigned in Inspector, use Default
         if (((int)groundLayer) == 0)
-        {
             groundLayer = LayerMask.GetMask("Default");
-        }
 
-        // --- DEBUG: Check animator references ---
-        Debug.Log($"[{playerType}] bodyAnimator is {(bodyAnimator != null ? "ASSIGNED (" + bodyAnimator.gameObject.name + ")" : "NULL")}");
-        Debug.Log($"[{playerType}] headAnimator is {(headAnimator != null ? "ASSIGNED (" + headAnimator.gameObject.name + ")" : "NULL")}");
-        
-        if (headAnimator != null)
+        // Create zero-friction physics material at runtime
+        // This removes the dependency on external .physicsMaterial2D asset files
+        PhysicsMaterial2D noFriction = new PhysicsMaterial2D("Player_NoFriction")
         {
-            var ctrl = headAnimator.runtimeAnimatorController;
-            Debug.Log($"[{playerType}] headAnimator controller: {(ctrl != null ? ctrl.name : "NULL")}");
-            Debug.Log($"[{playerType}] headAnimator enabled: {headAnimator.enabled}");
-            Debug.Log($"[{playerType}] headAnimator gameObject active: {headAnimator.gameObject.activeInHierarchy}");
-            
-            // Check if the Animator has the expected parameters
-            foreach (var param in headAnimator.parameters)
-            {
-                Debug.Log($"[{playerType}] headAnimator parameter: {param.name} (type: {param.type})");
-            }
-        }
+            friction = 0f,
+            bounciness = 0f
+        };
+        if (col != null)
+            col.sharedMaterial = noFriction;
     }
 
     void Update()
     {
-        // Check ground state with multiple fallbacks
-        isGrounded = CheckGrounded();
+        UpdateGroundState();
 
-        // Get movement and jump inputs based on the selected character
         float moveInput = GetHorizontalInput();
         bool jumpPressed = GetJumpInput();
 
-        // Apply velocity
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        ApplyMovement(moveInput);
 
-        // --- ANIMATION & HEAD TILT LOGIC ---
+        // Animation
         if (bodyAnimator != null)
-        {
             bodyAnimator.SetFloat("Speed", Mathf.Abs(moveInput));
             bodyAnimator.SetFloat("yVelocity", rb.linearVelocity.y);
             bodyAnimator.SetBool("IsGrounded", isGrounded);
         }
         
         if (headAnimator != null)
-        {
             headAnimator.SetFloat("Speed", Mathf.Abs(moveInput));
             headAnimator.SetFloat("yVelocity", rb.linearVelocity.y);
             headAnimator.SetBool("IsGrounded", isGrounded);
@@ -108,46 +100,122 @@ public class StandardPlayerMovement : MonoBehaviour
                           $"IsGrounded={headAnimator.GetBool("IsGrounded")}, " +
                           $"stateHash={stateInfo.shortNameHash}");
             }
-        }
 
-        // Flip the character sprite based on movement direction
-        if (moveInput > 0)
-        {
-            transform.localScale = new Vector3(1, 1, 1); // Face Right
-        }
-        else if (moveInput < 0)
-        {
-            transform.localScale = new Vector3(-1, 1, 1); // Face Left
-        }
+        // Flip sprite direction
+        if (moveInput > 0f)
+            transform.localScale = new Vector3(1f, 1f, 1f);
+        else if (moveInput < 0f)
+            transform.localScale = new Vector3(-1f, 1f, 1f);
 
-        // Apply jump force
+        // Jump: ONLY when grounded AND not moving upward
         if (jumpPressed && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            isGrounded = false;
         }
+    }
+
+    private void ApplyMovement(float moveInput)
+    {
+        bool onSlope = isGrounded && groundNormal.y < 0.99f && groundNormal.y > 0f;
+
+        if (!Mathf.Approximately(moveInput, 0f))
+        {
+            if (onSlope)
+            {
+                Vector2 moveDir = new Vector2(moveInput, 0f);
+                Vector2 slopeMove = Vector3.ProjectOnPlane(moveDir, groundNormal).normalized * moveSpeed;
+                float targetY = (slopeMove.y > 0f) ? slopeMove.y : rb.linearVelocity.y;
+                rb.linearVelocity = new Vector2(slopeMove.x, targetY);
+            }
+            else
+            {
+                rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+            }
+        }
+        else if (isGrounded)
+        {
+            if (!onSlope)
+            {
+                // Brake on flat ground only
+                float brakingX = Mathf.MoveTowards(rb.linearVelocity.x, 0f, moveSpeed * 8f * Time.deltaTime);
+                rb.linearVelocity = new Vector2(brakingX, rb.linearVelocity.y);
+            }
+            // If on a slope and no input, do nothing.
+            // This allows gravity and 0 friction to slide the player down naturally.
+        }
+    }
+
+    private void UpdateGroundState()
+    {
+        // 1. VELOCITY-BASED DOUBLE JUMP PREVENTION
+        // If upward velocity exceeds normal slope walking speeds (e.g. > 5.6), 
+        // the player MUST have jumped. Force isGrounded = false.
+        if (rb.linearVelocity.y > moveSpeed * 0.8f)
+        {
+            isGrounded = false;
+            groundNormal = Vector2.up;
+            return;
+        }
+
+        groundNormal = Vector2.up;
+        bool foundGround = false;
+
+        // 2. CHECK PHYSICS CONTACTS
+        int count = rb.GetContacts(contacts);
+        for (int i = 0; i < count; i++)
+        {
+            if (contacts[i].normal.y > 0.5f) // Threshold 0.5 allows up to 60-degree slopes
+            {
+                foundGround = true;
+                groundNormal = contacts[i].normal;
+                break;
+            }
+        }
+
+        // 3. OVERLAPCIRCLE FALLBACK (Crucial Fix)
+        // If we still didn't find ground, use the circle check.
+        if (!foundGround && groundCheck != null)
+        {
+            Collider2D[] hits = Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius, groundLayer);
+            foreach (Collider2D hit in hits)
+            {
+                // BUG FIX: Ignore the player's OWN collider!
+                // Previously, the circle was detecting the player's CapsuleCollider 
+                // causing them to ALWAYS be "grounded" even in mid-air.
+                if (hit.gameObject != gameObject && !hit.transform.IsChildOf(transform))
+                {
+                    foundGround = true;
+                    groundNormal = Vector2.up;
+                    break;
+                }
+            }
+        }
+
+        isGrounded = foundGround;
     }
 
     private float GetHorizontalInput()
     {
         float input = 0f;
 
-        // 1. Try New Input System
+        // 1. New Input System
         if (UnityEngine.InputSystem.Keyboard.current != null)
         {
-            var keyboard = UnityEngine.InputSystem.Keyboard.current;
+            var kb = UnityEngine.InputSystem.Keyboard.current;
             if (playerType == PlayerType.Fireboy)
             {
-                if (keyboard.leftArrowKey.isPressed) input = -1f;
-                else if (keyboard.rightArrowKey.isPressed) input = 1f;
+                if (kb.leftArrowKey.isPressed) input = -1f;
+                else if (kb.rightArrowKey.isPressed) input = 1f;
             }
-            else // Watergirl
+            else
             {
-                if (keyboard.aKey.isPressed) input = -1f;
-                else if (keyboard.dKey.isPressed) input = 1f;
+                if (kb.aKey.isPressed) input = -1f;
+                else if (kb.dKey.isPressed) input = 1f;
             }
         }
-        
-        // 2. Fallback to legacy Input System if no input was captured
+
+        // 2. Legacy Input System fallback
         if (Mathf.Approximately(input, 0f))
         {
             if (playerType == PlayerType.Fireboy)
@@ -155,7 +223,7 @@ public class StandardPlayerMovement : MonoBehaviour
                 if (Input.GetKey(KeyCode.LeftArrow)) input = -1f;
                 else if (Input.GetKey(KeyCode.RightArrow)) input = 1f;
             }
-            else // Watergirl
+            else
             {
                 if (Input.GetKey(KeyCode.A)) input = -1f;
                 else if (Input.GetKey(KeyCode.D)) input = 1f;
@@ -167,20 +235,17 @@ public class StandardPlayerMovement : MonoBehaviour
 
     private bool GetJumpInput()
     {
-        // 1. Try New Input System
+        // 1. New Input System
         if (UnityEngine.InputSystem.Keyboard.current != null)
         {
-            var keyboard = UnityEngine.InputSystem.Keyboard.current;
-            if (playerType == PlayerType.Fireboy)
-            {
-                if (keyboard.upArrowKey.wasPressedThisFrame) return true;
-            }
-            else // Watergirl
-            {
-                if (keyboard.wKey.wasPressedThisFrame) return true;
-            }
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (playerType == PlayerType.Fireboy && kb.upArrowKey.wasPressedThisFrame) return true;
+            if (playerType == PlayerType.Watergirl && kb.wKey.wasPressedThisFrame) return true;
         }
 
+        // 2. Legacy fallback
+        if (playerType == PlayerType.Fireboy && Input.GetKeyDown(KeyCode.UpArrow)) return true;
+        if (playerType == PlayerType.Watergirl && Input.GetKeyDown(KeyCode.W)) return true;
         // 2. Fallback to legacy Input System
         if (playerType == PlayerType.Fireboy)
         {
@@ -219,7 +284,7 @@ public class StandardPlayerMovement : MonoBehaviour
     {
         if (groundCheck != null)
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = isGrounded ? Color.green : Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }

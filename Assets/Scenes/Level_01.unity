@@ -11606,7 +11606,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   m_Size: {x: 0.85, y: 1.9}
-  m_EdgeRadius: 0
+  m_EdgeRadius: 0.08
 --- !u!1001 &1166382795
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16090,7 +16090,7 @@ TilemapCollider2D:
     m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
-  m_CompositeOperation: 0
+  m_CompositeOperation: 1
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_MaximumTileChangeCount: 1000
