@@ -13,100 +13,160 @@ public class StandardPlayerMovement : MonoBehaviour
 
     [Header("Components")]
     private Rigidbody2D rb;
-    public Animator bodyAnimator; 
+    private Collider2D col;
+    public Animator bodyAnimator;
     public Animator headAnimator;
 
     [Header("Ground Detection")]
-    public Transform groundCheck; 
+    public Transform groundCheck;
     public float groundCheckRadius = 0.25f;
-    public LayerMask groundLayer; 
+    public LayerMask groundLayer;
     private bool isGrounded;
+
+    // Internal: track the surface normal of what we're standing on
+    private Vector2 groundNormal = Vector2.up;
+    private ContactPoint2D[] contacts = new ContactPoint2D[8];
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
+
         rb.gravityScale = 3f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
+        // Fallback: if no ground layer assigned in Inspector, use Default
         if (((int)groundLayer) == 0)
-        {
             groundLayer = LayerMask.GetMask("Default");
-        }
+
+        // Create zero-friction physics material at runtime
+        // This removes the dependency on external .physicsMaterial2D asset files
+        PhysicsMaterial2D noFriction = new PhysicsMaterial2D("Player_NoFriction")
+        {
+            friction = 0f,
+            bounciness = 0f
+        };
+        if (col != null)
+            col.sharedMaterial = noFriction;
     }
 
     void Update()
     {
-        // Check ground state with multiple fallbacks
-        isGrounded = CheckGrounded();
+        UpdateGroundState();
 
-        // Get movement and jump inputs based on the selected character
         float moveInput = GetHorizontalInput();
         bool jumpPressed = GetJumpInput();
 
-        // Apply horizontal velocity
-        // When there's input: override velocity directly
-        // When no input AND on ground: stop (don't slide on flat floor)
-        // When no input AND in air: let physics handle x (allows sliding down slopes)
-        if (!Mathf.Approximately(moveInput, 0f))
-        {
-            rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
-        }
-        else if (isGrounded)
-        {
-            // On ground with no input — brake to stop (works on flat ground)
-            // Slopes will still cause slight sliding via physics if friction is 0
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x * 0.5f, rb.linearVelocity.y);
-        }
-        // If airborne with no input, do nothing — let gravity + physics handle it
+        ApplyMovement(moveInput);
 
-        // --- ANIMATION LOGIC ---
+        // Animation
         if (bodyAnimator != null)
-        {
             bodyAnimator.SetFloat("Speed", Mathf.Abs(moveInput));
-        }
         if (headAnimator != null)
-        {
             headAnimator.SetFloat("Speed", Mathf.Abs(moveInput));
-        }
 
-        // Flip the character sprite based on movement direction
-        if (moveInput > 0)
-        {
-            transform.localScale = new Vector3(1, 1, 1); // Face Right
-        }
-        else if (moveInput < 0)
-        {
-            transform.localScale = new Vector3(-1, 1, 1); // Face Left
-        }
+        // Flip sprite direction
+        if (moveInput > 0f)
+            transform.localScale = new Vector3(1f, 1f, 1f);
+        else if (moveInput < 0f)
+            transform.localScale = new Vector3(-1f, 1f, 1f);
 
-        // Apply jump force
+        // Jump: ONLY when grounded AND not moving upward
         if (jumpPressed && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            isGrounded = false;
         }
+    }
+
+    private void ApplyMovement(float moveInput)
+    {
+        if (!Mathf.Approximately(moveInput, 0f))
+        {
+            if (isGrounded && groundNormal != Vector2.up)
+            {
+                // On a slope: project movement direction along the slope surface
+                // This allows walking UP and DOWN slopes smoothly
+                Vector2 moveDir = new Vector2(moveInput, 0f);
+                Vector2 slopeMove = Vector3.ProjectOnPlane(moveDir, groundNormal).normalized * moveSpeed;
+                // Only override y if moving upward along slope (not fighting gravity when going down)
+                float targetY = (slopeMove.y > 0) ? slopeMove.y : rb.linearVelocity.y;
+                rb.linearVelocity = new Vector2(slopeMove.x, targetY);
+            }
+            else
+            {
+                // Flat ground or air: simple horizontal override
+                rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+            }
+        }
+        else if (isGrounded)
+        {
+            // No input while grounded: brake to a stop
+            // Use Lerp for smooth deceleration (not instant stop, not sticky)
+            float brakingX = Mathf.MoveTowards(rb.linearVelocity.x, 0f, moveSpeed * 8f * Time.deltaTime);
+            rb.linearVelocity = new Vector2(brakingX, rb.linearVelocity.y);
+        }
+        // Airborne with no input: let physics handle everything (enables slope sliding)
+    }
+
+    private void UpdateGroundState()
+    {
+        // RULE 1: If moving upward significantly, we are NOT grounded.
+        // This is the primary double-jump prevention mechanism.
+        if (rb.linearVelocity.y > 0.0f)
+        {
+            isGrounded = false;
+            groundNormal = Vector2.up;
+            return;
+        }
+
+        // RULE 2: Check contact normals.
+        // Threshold 0.75 means the surface must be within ~41 degrees of horizontal.
+        // A pure vertical wall has normal.y = 0, so it will NEVER pass this check.
+        // This prevents wall-jumping / wall-climbing.
+        groundNormal = Vector2.up;
+        int count = rb.GetContacts(contacts);
+        for (int i = 0; i < count; i++)
+        {
+            if (contacts[i].normal.y > 0.75f)
+            {
+                isGrounded = true;
+                groundNormal = contacts[i].normal;
+                return;
+            }
+        }
+
+        // RULE 3: OverlapCircle as a safety fallback
+        if (groundCheck != null && Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer))
+        {
+            isGrounded = true;
+            return;
+        }
+
+        isGrounded = false;
     }
 
     private float GetHorizontalInput()
     {
         float input = 0f;
 
-        // 1. Try New Input System
+        // 1. New Input System
         if (UnityEngine.InputSystem.Keyboard.current != null)
         {
-            var keyboard = UnityEngine.InputSystem.Keyboard.current;
+            var kb = UnityEngine.InputSystem.Keyboard.current;
             if (playerType == PlayerType.Fireboy)
             {
-                if (keyboard.leftArrowKey.isPressed) input = -1f;
-                else if (keyboard.rightArrowKey.isPressed) input = 1f;
+                if (kb.leftArrowKey.isPressed) input = -1f;
+                else if (kb.rightArrowKey.isPressed) input = 1f;
             }
-            else // Watergirl
+            else
             {
-                if (keyboard.aKey.isPressed) input = -1f;
-                else if (keyboard.dKey.isPressed) input = 1f;
+                if (kb.aKey.isPressed) input = -1f;
+                else if (kb.dKey.isPressed) input = 1f;
             }
         }
-        
-        // 2. Fallback to legacy Input System if no input was captured
+
+        // 2. Legacy Input System fallback
         if (Mathf.Approximately(input, 0f))
         {
             if (playerType == PlayerType.Fireboy)
@@ -114,7 +174,7 @@ public class StandardPlayerMovement : MonoBehaviour
                 if (Input.GetKey(KeyCode.LeftArrow)) input = -1f;
                 else if (Input.GetKey(KeyCode.RightArrow)) input = 1f;
             }
-            else // Watergirl
+            else
             {
                 if (Input.GetKey(KeyCode.A)) input = -1f;
                 else if (Input.GetKey(KeyCode.D)) input = 1f;
@@ -126,54 +186,17 @@ public class StandardPlayerMovement : MonoBehaviour
 
     private bool GetJumpInput()
     {
-        // 1. Try New Input System
+        // 1. New Input System
         if (UnityEngine.InputSystem.Keyboard.current != null)
         {
-            var keyboard = UnityEngine.InputSystem.Keyboard.current;
-            if (playerType == PlayerType.Fireboy)
-            {
-                if (keyboard.upArrowKey.wasPressedThisFrame) return true;
-            }
-            else // Watergirl
-            {
-                if (keyboard.wKey.wasPressedThisFrame) return true;
-            }
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (playerType == PlayerType.Fireboy && kb.upArrowKey.wasPressedThisFrame) return true;
+            if (playerType == PlayerType.Watergirl && kb.wKey.wasPressedThisFrame) return true;
         }
 
-        // 2. Fallback to legacy Input System
-        if (playerType == PlayerType.Fireboy)
-        {
-            if (Input.GetKeyDown(KeyCode.UpArrow)) return true;
-        }
-        else // Watergirl
-        {
-            if (Input.GetKeyDown(KeyCode.W)) return true;
-        }
-
-        return false;
-    }
-
-    private bool CheckGrounded()
-    {
-        // CRITICAL: If moving upward, we are NOT grounded — this prevents double jump
-        if (rb.linearVelocity.y > 0.5f) return false;
-
-        // Method A: contact normals (works regardless of layer mask)
-        ContactPoint2D[] contacts = new ContactPoint2D[8];
-        int count = rb.GetContacts(contacts);
-        for (int i = 0; i < count; i++)
-        {
-            if (contacts[i].normal.y > 0.6f)
-            {
-                return true;
-            }
-        }
-
-        // Method B: OverlapCircle fallback
-        if (groundCheck != null && Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer))
-        {
-            return true;
-        }
+        // 2. Legacy fallback
+        if (playerType == PlayerType.Fireboy && Input.GetKeyDown(KeyCode.UpArrow)) return true;
+        if (playerType == PlayerType.Watergirl && Input.GetKeyDown(KeyCode.W)) return true;
 
         return false;
     }
@@ -182,7 +205,7 @@ public class StandardPlayerMovement : MonoBehaviour
     {
         if (groundCheck != null)
         {
-            Gizmos.color = Color.red;
+            Gizmos.color = isGrounded ? Color.green : Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
