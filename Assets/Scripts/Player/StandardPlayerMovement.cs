@@ -9,7 +9,7 @@ public class StandardPlayerMovement : MonoBehaviour
 
     [Header("Movement Settings")]
     public float moveSpeed = 7f;
-    public float jumpForce = 12f;
+    public float jumpForce = 16f;
 
     [Header("Components")]
     private Rigidbody2D rb;
@@ -28,7 +28,6 @@ public class StandardPlayerMovement : MonoBehaviour
         rb.gravityScale = 3f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-        // If groundLayer is set to "Nothing" (0 in int terms), default to "Default"
         if (((int)groundLayer) == 0)
         {
             groundLayer = LayerMask.GetMask("Default");
@@ -44,8 +43,21 @@ public class StandardPlayerMovement : MonoBehaviour
         float moveInput = GetHorizontalInput();
         bool jumpPressed = GetJumpInput();
 
-        // Apply velocity
-        rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        // Apply horizontal velocity
+        // When there's input: override velocity directly
+        // When no input AND on ground: stop (don't slide on flat floor)
+        // When no input AND in air: let physics handle x (allows sliding down slopes)
+        if (!Mathf.Approximately(moveInput, 0f))
+        {
+            rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+        }
+        else if (isGrounded)
+        {
+            // On ground with no input — brake to stop (works on flat ground)
+            // Slopes will still cause slight sliding via physics if friction is 0
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x * 0.5f, rb.linearVelocity.y);
+        }
+        // If airborne with no input, do nothing — let gravity + physics handle it
 
         // --- ANIMATION LOGIC ---
         if (bodyAnimator != null)
@@ -143,19 +155,21 @@ public class StandardPlayerMovement : MonoBehaviour
 
     private bool CheckGrounded()
     {
-        // Method A (Priority): Check contact normals — works regardless of layer mask settings
+        // CRITICAL: If moving upward, we are NOT grounded — this prevents double jump
+        if (rb.linearVelocity.y > 0.5f) return false;
+
+        // Method A: contact normals (works regardless of layer mask)
         ContactPoint2D[] contacts = new ContactPoint2D[8];
         int count = rb.GetContacts(contacts);
         for (int i = 0; i < count; i++)
         {
-            // A contact with an upward-facing normal means we are standing on something
             if (contacts[i].normal.y > 0.6f)
             {
                 return true;
             }
         }
 
-        // Method B (Backup): OverlapCircle with groundLayer mask
+        // Method B: OverlapCircle fallback
         if (groundCheck != null && Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer))
         {
             return true;
