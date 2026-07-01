@@ -254,6 +254,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: PauseGame
       objectReference: {fileID: 0}
+    - target: {fileID: 8076464617236187689, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11866,6 +11870,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7727720891193622082, guid: e158790e0aaa38542b361865049c6285, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -9.36
+      objectReference: {fileID: 0}
+    - target: {fileID: 7727720891193622082, guid: e158790e0aaa38542b361865049c6285, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 9.76
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12320,6 +12332,14 @@ PrefabInstance:
     - target: {fileID: 2373280284912941252, guid: 81ccf175927d9ce44a777d24cbe3c4dd, type: 3}
       propertyPath: m_Name
       value: Blue_Door
+      objectReference: {fileID: 0}
+    - target: {fileID: 7229336504806246267, guid: 81ccf175927d9ce44a777d24cbe3c4dd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -12.49
+      objectReference: {fileID: 0}
+    - target: {fileID: 7229336504806246267, guid: 81ccf175927d9ce44a777d24cbe3c4dd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 9.88
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
