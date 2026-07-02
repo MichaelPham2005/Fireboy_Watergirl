@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 0940f78a8fa490e41adb7db7c1692a6e
+guid: 5187b64be7460ec429ba3ff735f5cf8f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -4797213625303350838
-    second: lava_blue_0
+      213: -6847656515856385389
+    second: wiper_1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 32
+  spritePixelsToUnits: 550
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,29 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: lava_blue_0
+      name: wiper_1_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 192
-        height: 32
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 289
+        y: 272
+        width: 719
+        height: 774
+      alignment: 9
+      pivot: {x: 0.15819217, y: 0.07534364}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape:
-      - - {x: 96, y: 16}
-        - {x: 75, y: -12}
-        - {x: -76, y: -12}
-        - {x: -96, y: 16}
-        - {x: -96, y: -16}
-        - {x: 96, y: -16}
-      tessellationDetail: 0
+      physicsShape: []
+      tessellationDetail: -1
       bones: []
-      spriteID: ac14120ef9fdc6db0800000000000000
-      internalID: -4797213625303350838
+      spriteID: 39abd74edac38f0a0800000000000000
+      internalID: -6847656515856385389
       vertices: []
       indices: 
       edges: []
@@ -131,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: ae6d0c6fe9bb0024ab3b67f5746c9c0a
     internalID: 0
     vertices: []
     indices: 
@@ -141,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      lava_blue_0: -4797213625303350838
+      wiper_1_0: -6847656515856385389
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
