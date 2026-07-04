@@ -281,11 +281,21 @@ public class StandardPlayerMovement : MonoBehaviour
         return false;
     }
 
+    public void TriggerWinSequence()
+    {
+        rb.linearVelocity = Vector2.zero;
+        if (bodyAnimator != null) bodyAnimator.SetTrigger("EnterDoor");
+        if (headAnimator != null) headAnimator.SetTrigger("EnterDoor");
+        
+        // Stop accepting input
+        this.enabled = false;
+    }
+
     private void OnDrawGizmosSelected()
     {
         if (groundCheck != null)
         {
-            Gizmos.color = isGrounded ? Color.green : Color.red;
+            Gizmos.color = Color.red;
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }

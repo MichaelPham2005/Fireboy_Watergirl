@@ -7,28 +7,37 @@ public class DoorController : MonoBehaviour
     [SerializeField] private string requiredPlayerTag = "Player"; 
     
     private Animator animator;
+    public bool IsPlayerReady { get; private set; } = false;
 
-    void Start()
+    private void Start()
     {
-        // Automatically grab the Animator attached to this specific door
         animator = GetComponent<Animator>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        // Check if the object entering the trigger has the specific tag we set in the Inspector
-        if (collision.gameObject.CompareTag(requiredPlayerTag)) 
+        if (other.CompareTag(requiredPlayerTag))
         {
-            animator.SetBool("isOpen", true);
+            // Player entered their correct door
+            IsPlayerReady = true;
+            if (animator != null)
+            {
+                animator.SetBool("IsOpen", true);
+            }
+            if (GameManager.Instance != null) GameManager.Instance.CheckWinCondition();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    private void OnTriggerExit2D(Collider2D other)
     {
-        // Check if the correct character is leaving the door area
-        if (collision.gameObject.CompareTag(requiredPlayerTag)) 
+        if (other.CompareTag(requiredPlayerTag))
         {
-            animator.SetBool("isOpen", false);
+            // Player left the door
+            IsPlayerReady = false;
+            if (animator != null)
+            {
+                animator.SetBool("IsOpen", false);
+            }
         }
     }
 }

@@ -62,6 +62,9 @@ public class PlayerHealth : MonoBehaviour
         // 1. Disable movement immediately
         if (movementScript != null) movementScript.enabled = false;
         
+        // Notify GameManager to trigger Game Over
+        if (GameManager.Instance != null) GameManager.Instance.LoseGame();
+
         // 2. Trigger the Death animation on the body, and simply HIDE the head
         if (movementScript != null)
         {
