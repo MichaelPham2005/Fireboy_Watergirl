@@ -1,75 +1,53 @@
 using UnityEngine;
 
-/// <summary>
-/// Attach to any pushable object (e.g. Rock).
-/// Ensures the object can only be pushed horizontally by the player
-/// and does not get launched vertically.
-/// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
-public class Pushable : MonoBehaviour
+public class PushableRock : MonoBehaviour
 {
     [Header("Push Settings")]
-    [Tooltip("Horizontal damping when nothing is pushing the rock. Higher = stops faster.")]
-    public float horizontalDamping = 10f;
-
-    [Tooltip("Maximum horizontal speed the rock can be pushed to.")]
-    public float maxPushSpeed = 5f;
+    public float pushForce = 5f;
+    public float horizontalDamping = 5f;
+    public float maxPushSpeed = 3f;
 
     private Rigidbody2D rb;
-    private ContactPoint2D[] contacts = new ContactPoint2D[4];
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+        
+        // Configure physics for a heavy object
+        rb.mass = 5f;
+        rb.gravityScale = 3f;
+        rb.angularDamping = 2f; 
 
-        // Freeze rotation so the rock never tips over
-        rb.constraints = RigidbodyConstraints2D.FreezeRotation;
+        // Comment out the line below to allow natural tilting on slopes
+        // rb.constraints = RigidbodyConstraints2D.FreezeRotation; 
 
-        // Apply zero friction so the rock doesn't get stuck in corners or on walls
+        // Apply friction to interact with surfaces
         Collider2D col = GetComponent<Collider2D>();
-        if (col != null)
+        if (col != null && col.sharedMaterial == null)
         {
-            PhysicsMaterial2D noFriction = new PhysicsMaterial2D("Rock_NoFriction")
-            {
-                friction = 0f,
-                bounciness = 0f
-            };
-            col.sharedMaterial = noFriction;
+            col.sharedMaterial = new PhysicsMaterial2D("RockMaterial") { friction = 0.5f };
+        }
+    }
+
+    public void ApplyPush(float direction)
+    {
+        // Apply force only if below speed limit
+        if (Mathf.Abs(rb.linearVelocity.x) < maxPushSpeed)
+        {
+            rb.AddForce(Vector2.right * direction * pushForce, ForceMode2D.Force);
         }
     }
 
     void FixedUpdate()
     {
-        bool isGrounded = false;
-        int count = rb.GetContacts(contacts);
-        for (int i = 0; i < count; i++)
+        // Apply damping to stop sliding
+        if (Mathf.Abs(rb.linearVelocity.x) > 0.1f)
         {
-            // Check if there is ground below the rock
-            if (contacts[i].normal.y > 0.5f)
-            {
-                isGrounded = true;
-                break;
-            }
+            rb.linearVelocity = new Vector2(
+                Mathf.MoveTowards(rb.linearVelocity.x, 0f, horizontalDamping * Time.fixedDeltaTime),
+                rb.linearVelocity.y
+            );
         }
-
-        float targetX = rb.linearVelocity.x;
-
-        if (!isGrounded)
-        {
-            // 1. FALL STRAIGHT DOWN
-            // If the rock is in the air, instantly kill horizontal velocity
-            targetX = 0f;
-        }
-        else
-        {
-            // 2. STOP WHEN NOT PUSHED
-            // On the ground, apply damping so it stops sliding when the player lets go
-            targetX = Mathf.MoveTowards(rb.linearVelocity.x, 0f, horizontalDamping * Time.fixedDeltaTime);
-        }
-
-        // Clamp horizontal velocity so the rock can't be infinitely accelerated by the player
-        float clampedX = Mathf.Clamp(targetX, -maxPushSpeed, maxPushSpeed);
-        
-        rb.linearVelocity = new Vector2(clampedX, rb.linearVelocity.y);
     }
 }
