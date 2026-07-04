@@ -51,16 +51,7 @@ public class PlayerHealth : MonoBehaviour
         return false;
     }
 
-    private bool ShouldDieFromCollision(Collision2D col)
-    {
-        // Only die if the character lands on TOP of the liquid.
-        // If they hit from the bottom or sides (the brick), they should not die.
-        foreach (ContactPoint2D contact in col.contacts)
-        {
-            if (contact.normal.y > 0.1f) return true;
-        }
-        return false;
-    }
+
 
     private void CheckDeath(PoolElement pool)
     {

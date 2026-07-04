@@ -1,5 +1,11 @@
 using UnityEngine;
 
+public enum PlayerType
+{
+    Fireboy  = 0,
+    Watergirl = 1
+}
+
 public class StandardPlayerMovement : MonoBehaviour
 {
     [Header("Movement Settings")]
@@ -21,10 +27,15 @@ public class StandardPlayerMovement : MonoBehaviour
     private bool isGrounded;
     public bool isTouchingLever = false; // Theo dõi xem có đang kẹt trong cần gạt không
 
+    [Header("Player Identity")]
+    public PlayerType playerType = PlayerType.Fireboy;
+
     // Internal: track the surface normal of what we're standing on
     private Vector2 groundNormal = Vector2.up;
     private ContactPoint2D[] contacts = new ContactPoint2D[8];
     private Vector3 initialScale;
+    private Collider2D col;
+    private bool jumpPressed;
 
     void Start()
     {
@@ -68,13 +79,13 @@ public class StandardPlayerMovement : MonoBehaviour
         // --- NEW ANIMATION LOGIC ---
 
         // 2. Tell the Animator how fast we are moving (Mathf.Abs turns negative speeds positive)
-        if (bodyAnimator != null)
+        if (bodyAnimator != null && bodyAnimator.runtimeAnimatorController != null)
         {
             bodyAnimator.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x)); 
             bodyAnimator.SetFloat("yVelocity", rb.linearVelocity.y);
             bodyAnimator.SetBool("IsGrounded", isGrounded);
         }
-        if (headAnimator != null)
+        if (headAnimator != null && headAnimator.runtimeAnimatorController != null)
         {
             headAnimator.SetFloat("Speed", Mathf.Abs(rb.linearVelocity.x));
             headAnimator.SetFloat("yVelocity", rb.linearVelocity.y);
@@ -99,6 +110,7 @@ public class StandardPlayerMovement : MonoBehaviour
         else if (moveInput < 0f)
             transform.localScale = new Vector3(-Mathf.Abs(initialScale.x), initialScale.y, initialScale.z);
 
+        jumpPressed = GetJumpInput();
         if (jumpPressed && isGrounded)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
