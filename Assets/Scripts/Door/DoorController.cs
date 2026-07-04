@@ -4,7 +4,7 @@ public class DoorController : MonoBehaviour
 {
     [Header("Door Settings")]
     [Tooltip("The tag of the player that can open this door (e.g., 'Fireboy' or 'Watergirl')")]
-    [SerializeField] private string requiredPlayerTag = "Player"; 
+    [SerializeField] public string requiredPlayerTag = "Player"; 
     
     private Animator animator;
     public bool IsPlayerReady { get; private set; } = false;

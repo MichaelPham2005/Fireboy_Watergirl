@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
 
         // Auto-find doors to make setup easier
-        DoorController[] doors = FindObjectsOfType<DoorController>();
+        DoorController[] doors = FindObjectsByType<DoorController>(FindObjectsSortMode.None);
         foreach (DoorController door in doors)
         {
             if (door.requiredPlayerTag == "Fireboy") fireDoor = door;
@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
         SaveSystem.SaveTime(levelNameForSave, timeElapsed);
 
         // Tell players to play win animation and stop
-        StandardPlayerMovement[] players = FindObjectsOfType<StandardPlayerMovement>();
+        StandardPlayerMovement[] players = FindObjectsByType<StandardPlayerMovement>(FindObjectsSortMode.None);
         foreach (var player in players)
         {
             player.TriggerWinSequence();
@@ -96,7 +96,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Game Over!");
         
         // Disable players
-        StandardPlayerMovement[] players = FindObjectsOfType<StandardPlayerMovement>();
+        StandardPlayerMovement[] players = FindObjectsByType<StandardPlayerMovement>(FindObjectsSortMode.None);
         foreach (var player in players)
         {
             player.enabled = false;
