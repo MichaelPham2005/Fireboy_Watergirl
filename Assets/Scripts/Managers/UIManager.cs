@@ -60,13 +60,13 @@ public class UIManager : MonoBehaviour
         if (winPanel != null) winPanel.SetActive(true);
         Time.timeScale = 0f; // Pause game
 
-        // Display current time
+        // Display current time (Time format only)
         float time = GameManager.Instance.timeElapsed;
         if (currentTimeText != null)
         {
             int m = Mathf.FloorToInt(time / 60F);
             int s = Mathf.FloorToInt(time - m * 60);
-            currentTimeText.text = "Your Time: " + string.Format("{0:00}:{1:00}", m, s);
+            currentTimeText.text = string.Format("{0:00}:{1:00}", m, s);
         }
 
         // Display Gems
@@ -79,20 +79,20 @@ public class UIManager : MonoBehaviour
             blueGemCountText.text = "x " + GameManager.Instance.blueGemsCollected;
         }
 
-        // Calculate and Display Rank
+        // Calculate, Display, and Save Rank
         if (rankText != null)
         {
-            string rank = "F";
+            int rankNum = 4;
             // Simple rank calculation based on time
-            if (time <= 60f) rank = "S";
-            else if (time <= 90f) rank = "A";
-            else if (time <= 120f) rank = "B";
-            else if (time <= 180f) rank = "C";
+            if (time <= 60f) rankNum = 1;
+            else if (time <= 90f) rankNum = 2;
+            else if (time <= 120f) rankNum = 3;
 
-            rankText.text = "RANK: " + rank;
+            // Just display the number as requested
+            rankText.text = rankNum.ToString();
             
-            // Still save the time in the background even if we don't display the list
-            LevelData data = SaveSystem.LoadLevelData(GameManager.Instance.levelNameForSave);
+            // Save the rank using SaveSystem
+            SaveSystem.SaveRank(GameManager.Instance.levelNameForSave, rankNum);
         }
     }
 

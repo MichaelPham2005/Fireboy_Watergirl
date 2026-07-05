@@ -5,6 +5,7 @@ using UnityEngine;
 public class LevelData
 {
     public List<float> topTimes = new List<float>();
+    public int bestRank = 99; // 99 means unranked/unplayed. 1 is best.
 }
 
 public static class SaveSystem
@@ -26,6 +27,21 @@ public static class SaveSystem
         string json = JsonUtility.ToJson(data);
         PlayerPrefs.SetString("LevelData_" + levelName, json);
         PlayerPrefs.Save();
+    }
+
+    public static void SaveRank(string levelName, int newRank)
+    {
+        LevelData data = LoadLevelData(levelName);
+        
+        // Lower number is better (Rank 1 > Rank 2)
+        if (newRank < data.bestRank)
+        {
+            data.bestRank = newRank;
+            
+            string json = JsonUtility.ToJson(data);
+            PlayerPrefs.SetString("LevelData_" + levelName, json);
+            PlayerPrefs.Save();
+        }
     }
 
     public static LevelData LoadLevelData(string levelName)
