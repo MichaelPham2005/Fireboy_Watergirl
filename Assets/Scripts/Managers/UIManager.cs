@@ -13,7 +13,9 @@ public class UIManager : MonoBehaviour
 
     [Header("Win UI Elements")]
     public TextMeshProUGUI currentTimeText;
-    public TextMeshProUGUI rankingListText;
+    public TextMeshProUGUI redGemCountText;
+    public TextMeshProUGUI blueGemCountText;
+    public TextMeshProUGUI rankText;
 
     private void Start()
     {
@@ -67,18 +69,30 @@ public class UIManager : MonoBehaviour
             currentTimeText.text = "Your Time: " + string.Format("{0:00}:{1:00}", m, s);
         }
 
-        // Display Rankings
-        if (rankingListText != null)
+        // Display Gems
+        if (redGemCountText != null)
         {
+            redGemCountText.text = "x " + GameManager.Instance.redGemsCollected;
+        }
+        if (blueGemCountText != null)
+        {
+            blueGemCountText.text = "x " + GameManager.Instance.blueGemsCollected;
+        }
+
+        // Calculate and Display Rank
+        if (rankText != null)
+        {
+            string rank = "F";
+            // Simple rank calculation based on time
+            if (time <= 60f) rank = "S";
+            else if (time <= 90f) rank = "A";
+            else if (time <= 120f) rank = "B";
+            else if (time <= 180f) rank = "C";
+
+            rankText.text = "RANK: " + rank;
+            
+            // Still save the time in the background even if we don't display the list
             LevelData data = SaveSystem.LoadLevelData(GameManager.Instance.levelNameForSave);
-            rankingListText.text = "Top Times:\n";
-            for (int i = 0; i < data.topTimes.Count; i++)
-            {
-                float t = data.topTimes[i];
-                int min = Mathf.FloorToInt(t / 60F);
-                int sec = Mathf.FloorToInt(t - min * 60);
-                rankingListText.text += (i + 1) + ". " + string.Format("{0:00}:{1:00}", min, sec) + "\n";
-            }
         }
     }
 

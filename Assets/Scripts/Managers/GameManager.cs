@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     [Header("State")]
     public float timeElapsed = 0f;
     public bool isGameActive = true;
+    public int redGemsCollected = 0;
+    public int blueGemsCollected = 0;
 
     [Header("Events")]
     public UnityEvent OnWin;
@@ -32,6 +34,8 @@ public class GameManager : MonoBehaviour
     {
         isGameActive = true;
         timeElapsed = 0f;
+        redGemsCollected = 0;
+        blueGemsCollected = 0;
         Time.timeScale = 1f;
 
         // Auto-find doors to make setup easier
@@ -73,6 +77,7 @@ public class GameManager : MonoBehaviour
         isGameActive = false;
         
         Debug.Log("Level Complete! Time: " + timeElapsed.ToString("F2"));
+        Debug.Log("Red Gems: " + redGemsCollected + " | Blue Gems: " + blueGemsCollected);
         
         // Save the time
         SaveSystem.SaveTime(levelNameForSave, timeElapsed);
@@ -103,5 +108,17 @@ public class GameManager : MonoBehaviour
         }
 
         OnLose?.Invoke();
+    }
+
+    public void CollectRedGem()
+    {
+        redGemsCollected++;
+        Debug.Log("Red Gems: " + redGemsCollected);
+    }
+
+    public void CollectBlueGem()
+    {
+        blueGemsCollected++;
+        Debug.Log("Blue Gems: " + blueGemsCollected);
     }
 }

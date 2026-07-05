@@ -64,6 +64,8 @@ MonoBehaviour:
   levelNameForSave: Level_01
   timeElapsed: 0
   isGameActive: 1
+  redGemsCollected: 0
+  blueGemsCollected: 0
   OnWin:
     m_PersistentCalls:
       m_Calls: []
@@ -86,4 +88,6 @@ MonoBehaviour:
   gameOverPanel: {fileID: 0}
   winPanel: {fileID: 0}
   currentTimeText: {fileID: 0}
-  rankingListText: {fileID: 0}
+  redGemCountText: {fileID: 0}
+  blueGemCountText: {fileID: 0}
+  rankText: {fileID: 0}
