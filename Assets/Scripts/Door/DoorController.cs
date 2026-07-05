@@ -22,7 +22,7 @@ public class DoorController : MonoBehaviour
             IsPlayerReady = true;
             if (animator != null)
             {
-                animator.SetBool("IsOpen", true);
+                animator.SetBool("isOpen", true); // Fixed case to match Unity parameter
             }
             if (GameManager.Instance != null) GameManager.Instance.CheckWinCondition();
         }
@@ -36,7 +36,7 @@ public class DoorController : MonoBehaviour
             IsPlayerReady = false;
             if (animator != null)
             {
-                animator.SetBool("IsOpen", false);
+                animator.SetBool("isOpen", false); // Fixed case to match Unity parameter
             }
         }
     }

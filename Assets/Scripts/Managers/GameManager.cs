@@ -82,13 +82,41 @@ public class GameManager : MonoBehaviour
         // Save the time
         SaveSystem.SaveTime(levelNameForSave, timeElapsed);
 
-        // Tell players to play win animation and stop
+        // Stop both players from moving immediately and perfectly center them on their doors
         StandardPlayerMovement[] players = FindObjectsByType<StandardPlayerMovement>(FindObjectsSortMode.None);
+        foreach (var player in players)
+        {
+            player.FreezeForWin();
+            
+            // Snap to the exact center X position of their respective door
+            if (player.playerType == StandardPlayerMovement.PlayerType.Fireboy && fireDoor != null)
+            {
+                player.transform.position = new Vector2(fireDoor.transform.position.x, player.transform.position.y);
+            }
+            else if (player.playerType == StandardPlayerMovement.PlayerType.Watergirl && waterDoor != null)
+            {
+                player.transform.position = new Vector2(waterDoor.transform.position.x, player.transform.position.y);
+            }
+        }
+
+        // Start delay sequence before showing UI
+        StartCoroutine(WinSequenceRoutine(players));
+    }
+
+    private System.Collections.IEnumerator WinSequenceRoutine(StandardPlayerMovement[] players)
+    {
+        // 1. Wait for 1 second to let the doors fully open
+        yield return new WaitForSeconds(1f);
+        
+        // 2. Trigger the players to walk into the doors
         foreach (var player in players)
         {
             player.TriggerWinSequence();
         }
 
+        // 3. Wait for 1.5 seconds for player entering animations to finish
+        yield return new WaitForSeconds(1.5f);
+        
         // Notify UI
         OnWin?.Invoke();
     }
