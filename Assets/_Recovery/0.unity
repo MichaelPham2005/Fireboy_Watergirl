@@ -10996,17 +10996,6 @@ Transform:
   - {fileID: 2000935707}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &930943707 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2173637210375358662, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-  m_PrefabInstance: {fileID: 2829094987906942966}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1 &977097674
 GameObject:
   m_ObjectHideFlags: 0
@@ -16047,17 +16036,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5720023688953405060, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
   m_PrefabInstance: {fileID: 1940636512}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1955786052 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5481592736162478894, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
-  m_PrefabInstance: {fileID: 486556038455347428}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0071875e885fec943a833e6cdccd4d41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::UIManager
 --- !u!1 &2000935706
 GameObject:
   m_ObjectHideFlags: 0
@@ -16438,14 +16416,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
-    - target: {fileID: 5481592736162478894, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
-      propertyPath: timerText
-      value: 
-      objectReference: {fileID: 930943707}
-    - target: {fileID: 5481592736162478894, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
-      propertyPath: gameOverPanel
-      value: 
-      objectReference: {fileID: 2829094987906942968}
     - target: {fileID: 5823044443515468083, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
       propertyPath: levelTitleText
       value: 
@@ -16748,54 +16718,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 203893231}
-    - target: {fileID: 2404382352714334600, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2684760354459310946, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1955786052}
-    - target: {fileID: 2684760354459310946, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: RetryLevel
-      objectReference: {fileID: 0}
-    - target: {fileID: 2684760354459310946, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UIManager, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 2974793914758450800, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -2.5477295
-      objectReference: {fileID: 0}
-    - target: {fileID: 3553899337828453932, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 180.8953
-      objectReference: {fileID: 0}
-    - target: {fileID: 3553899337828453932, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 31.2485
-      objectReference: {fileID: 0}
-    - target: {fileID: 3553899337828453932, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: -9.5523
-      objectReference: {fileID: 0}
-    - target: {fileID: 3553899337828453932, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 209.3978
-      objectReference: {fileID: 0}
-    - target: {fileID: 3849796731082713302, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 1955786052}
-    - target: {fileID: 3849796731082713302, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GoToHome
-      objectReference: {fileID: 0}
-    - target: {fileID: 3849796731082713302, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: UIManager, Assembly-CSharp
-      objectReference: {fileID: 0}
     - target: {fileID: 4600273220705687647, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
       propertyPath: m_Name
       value: MenuHandler
@@ -16904,11 +16826,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
---- !u!1 &2829094987906942968 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2404382352714334600, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-  m_PrefabInstance: {fileID: 2829094987906942966}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &3061589570826054430
 MonoBehaviour:
   m_ObjectHideFlags: 0

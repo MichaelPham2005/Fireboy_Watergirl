@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6920950346600540070}
   - component: {fileID: 5823044443515468083}
+  - component: {fileID: 5466106277131770268}
+  - component: {fileID: 5481592736162478894}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -45,3 +47,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PauseMenuManager
   pauseMenuPanel: {fileID: 0}
+  levelTitleText: {fileID: 0}
+--- !u!114 &5466106277131770268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2648715472787188313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e186aae7e892ee64b92726bb75769808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  maxLevelTime: 120
+  levelNameForSave: Level_01
+  timeElapsed: 0
+  isGameActive: 1
+  OnWin:
+    m_PersistentCalls:
+      m_Calls: []
+  OnLose:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &5481592736162478894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2648715472787188313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0071875e885fec943a833e6cdccd4d41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
+  timerText: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+  winPanel: {fileID: 0}
+  currentTimeText: {fileID: 0}
+  rankingListText: {fileID: 0}
