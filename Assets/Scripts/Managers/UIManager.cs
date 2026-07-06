@@ -13,7 +13,9 @@ public class UIManager : MonoBehaviour
 
     [Header("Win UI Elements")]
     public TextMeshProUGUI currentTimeText;
-    public TextMeshProUGUI rankingListText;
+    public TextMeshProUGUI redGemCountText;
+    public TextMeshProUGUI blueGemCountText;
+    public TextMeshProUGUI rankText;
 
     private void Start()
     {
@@ -58,27 +60,39 @@ public class UIManager : MonoBehaviour
         if (winPanel != null) winPanel.SetActive(true);
         Time.timeScale = 0f; // Pause game
 
-        // Display current time
+        // Display current time (Time format only)
         float time = GameManager.Instance.timeElapsed;
         if (currentTimeText != null)
         {
             int m = Mathf.FloorToInt(time / 60F);
             int s = Mathf.FloorToInt(time - m * 60);
-            currentTimeText.text = "Your Time: " + string.Format("{0:00}:{1:00}", m, s);
+            currentTimeText.text = string.Format("{0:00}:{1:00}", m, s);
         }
 
-        // Display Rankings
-        if (rankingListText != null)
+        // Display Gems
+        if (redGemCountText != null)
         {
-            LevelData data = SaveSystem.LoadLevelData(GameManager.Instance.levelNameForSave);
-            rankingListText.text = "Top Times:\n";
-            for (int i = 0; i < data.topTimes.Count; i++)
-            {
-                float t = data.topTimes[i];
-                int min = Mathf.FloorToInt(t / 60F);
-                int sec = Mathf.FloorToInt(t - min * 60);
-                rankingListText.text += (i + 1) + ". " + string.Format("{0:00}:{1:00}", min, sec) + "\n";
-            }
+            redGemCountText.text = "x " + GameManager.Instance.redGemsCollected;
+        }
+        if (blueGemCountText != null)
+        {
+            blueGemCountText.text = "x " + GameManager.Instance.blueGemsCollected;
+        }
+
+        // Calculate, Display, and Save Rank
+        if (rankText != null)
+        {
+            int rankNum = 4;
+            // Simple rank calculation based on time
+            if (time <= 60f) rankNum = 1;
+            else if (time <= 90f) rankNum = 2;
+            else if (time <= 120f) rankNum = 3;
+
+            // Just display the number as requested
+            rankText.text = rankNum.ToString();
+            
+            // Save the rank using SaveSystem
+            SaveSystem.SaveRank(GameManager.Instance.levelNameForSave, rankNum);
         }
     }
 

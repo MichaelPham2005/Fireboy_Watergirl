@@ -260,6 +260,19 @@ public class StandardPlayerMovement : MonoBehaviour
         return false;
     }
 
+    public void FreezeForWin()
+    {
+        // Stop physical movement
+        rb.linearVelocity = Vector2.zero;
+        
+        // Reset animator parameters so they don't get stuck running in place
+        if (bodyAnimator != null) bodyAnimator.SetFloat("Speed", 0f);
+        if (headAnimator != null) headAnimator.SetFloat("Speed", 0f);
+        
+        // Disable script to stop input
+        this.enabled = false;
+    }
+
     private bool CheckGrounded()
     {
         if (groundCheck == null) return false;
@@ -284,8 +297,16 @@ public class StandardPlayerMovement : MonoBehaviour
     public void TriggerWinSequence()
     {
         rb.linearVelocity = Vector2.zero;
+        
+        // Play the full-body animation on the Body animator
         if (bodyAnimator != null) bodyAnimator.SetTrigger("EnterDoor");
-        if (headAnimator != null) headAnimator.SetTrigger("EnterDoor");
+        
+        // Hide the head completely so it doesn't overlap the full-body animation
+        if (headAnimator != null)
+        {
+            SpriteRenderer headSprite = headAnimator.GetComponent<SpriteRenderer>();
+            if (headSprite != null) headSprite.enabled = false;
+        }
         
         // Stop accepting input
         this.enabled = false;

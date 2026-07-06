@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 37f3dbfd41094024f95c30ff991e8dd0
+guid: bcb36cf97eb3b9e4784b19f83639fdbf
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 1244476889673583485
-    second: chain_0
+      213: 2407525554009103787
+    second: TimerBackground_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -40,9 +40,9 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
-    wrapW: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -100,23 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: chain_0
+      name: TimerBackground_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 2
         y: 0
-        width: 50
-        height: 234
+        width: 1310
+        height: 423
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d7b4d2c3325454110800000000000000
-      internalID: 1244476889673583485
+      spriteID: bad536a5cbf396120800000000000000
+      internalID: 2407525554009103787
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: cce8856679e99e147a2938cc98a19097
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      chain_0: 1244476889673583485
+      TimerBackground_0: 2407525554009103787
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
