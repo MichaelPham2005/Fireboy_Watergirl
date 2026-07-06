@@ -18,11 +18,14 @@ public class PulleyPlatform : MonoBehaviour
     {
         GameObject other = collision.gameObject;
 
-        // Only react to players, and only if we haven't already counted them
-        if ((other.CompareTag("Fireboy") || other.CompareTag("Watergirl"))
-            && !trackedPlayers.Contains(other))
+        // Check if the object is a player or a pushable rock
+        bool isPlayer = other.CompareTag("Fireboy") || other.CompareTag("Watergirl");
+        bool isPushable = other.GetComponent<PushableRock>() != null || other.name.Contains("Rock");
+
+        // Only react to valid heavy objects, and only if we haven't already counted them
+        if ((isPlayer || isPushable) && !trackedPlayers.Contains(other))
         {
-            // Make sure the player is ABOVE the platform (standing on top, not bumping the side)
+            // Make sure the object is ABOVE the platform (standing on top, not bumping the side)
             if (other.transform.position.y > transform.position.y)
             {
                 trackedPlayers.Add(other);
