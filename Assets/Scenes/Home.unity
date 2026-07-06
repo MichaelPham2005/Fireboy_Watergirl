@@ -2690,6 +2690,87 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1821462936}
   m_CullTransparentMesh: 1
+--- !u!1 &1826085442
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1826085444}
+  - component: {fileID: 1826085443}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1826085443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826085442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f33ffaaf2f4a1460d9baa7806feca0be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  bgmVolume: 0.5
+  sfxVolume: 1
+  menuMusic: {fileID: 8300000, guid: 10fa387c61e914876a40e590eb5b7321, type: 3}
+  levelMusic: {fileID: 8300000, guid: 4d0eda61cd6974d9283b8f6717cd3d2f, type: 3}
+  levelMusicDark: {fileID: 8300000, guid: 71dc8d7c5528941e38b0ab88cb9cc243, type: 3}
+  levelMusicSpeed: {fileID: 8300000, guid: e7458ded4b0ac44edbb6408a08bcdcba, type: 3}
+  levelMusicFinish: {fileID: 8300000, guid: 528e84e4ffff24043a5556bca6a84563, type: 3}
+  levelMusicFinishSpeed: {fileID: 8300000, guid: 203049945c7c14ab1a6d2a83432b1100, type: 3}
+  levelMusicOver: {fileID: 8300000, guid: 106f0b172566f4c409d60fe1927d21a6, type: 3}
+  jumpFireboy: {fileID: 8300000, guid: c2c2b5b126bbe4eb1b35c0c89298ada7, type: 3}
+  jumpWatergirl: {fileID: 8300000, guid: f818b59d65d734e158691ac8cb654b0b, type: 3}
+  steps: {fileID: 8300000, guid: 7d3a5aa8647c34293ae0ba0f910cd255, type: 3}
+  iceStepsFireboy: {fileID: 8300000, guid: 167a2dbc911aa48b586ec11cdd896253, type: 3}
+  iceStepsWatergirl: {fileID: 8300000, guid: 6664e82580a48498ab6be5191cb903b7, type: 3}
+  waterSteps: {fileID: 8300000, guid: c654a998ab9dd4ac4b58313a3e87e14d, type: 3}
+  death: {fileID: 8300000, guid: 95ae8c6358bd641bbb28b9809731e2c4, type: 3}
+  diamond: {fileID: 8300000, guid: 2db20fab76c0840e2a6e831b2b612bb4, type: 3}
+  endDiamond: {fileID: 8300000, guid: 10deb9772b79b4049a9b9514951fe6f4, type: 3}
+  door: {fileID: 8300000, guid: ab445d88e43ba4a57b7f030463272fb5, type: 3}
+  endPass: {fileID: 8300000, guid: 2d6c88eaf46ac4eb19b905ec51ae4777, type: 3}
+  endFail: {fileID: 8300000, guid: 917ec6d237b3e40f693dfa323f6bdb9e, type: 3}
+  clock: {fileID: 8300000, guid: b1bd9ba1973b84feeaf45f45d8954133, type: 3}
+  lever: {fileID: 8300000, guid: d92b21dde778846dcab392f3c8103397, type: 3}
+  platform: {fileID: 8300000, guid: a3f2b237a63674b8bbeed3b1a3a908fa, type: 3}
+  platformCorrupt: {fileID: 8300000, guid: caf7f649643a2410a88e2899a44bebc2, type: 3}
+  pusher: {fileID: 8300000, guid: 6f376f34cb1634ce691e273684d37281, type: 3}
+  lightPusher: {fileID: 8300000, guid: 54802e260cbcc4533ba52a7b24b27c2d, type: 3}
+  freeze: {fileID: 8300000, guid: 7a00784764ab6423099d7192f558460f, type: 3}
+  melt: {fileID: 8300000, guid: 95bc779bedddd43249556b839dbd7b13, type: 3}
+  portalOpen: {fileID: 8300000, guid: 8380ceefeda4e4dae87e96c55cd19e73, type: 3}
+  portalClose: {fileID: 8300000, guid: 2ffdadee826344d86ba04c817a7e34aa, type: 3}
+  portalLoop: {fileID: 8300000, guid: 18fc2ac21b4d04a2691cf2cbddc68e54, type: 3}
+  portalTransport: {fileID: 8300000, guid: 3e77a2d72842d48319d399ae66e56fac, type: 3}
+  slider: {fileID: 8300000, guid: 747d459972d734c6eb7fb58dc5546fae, type: 3}
+  wind: {fileID: 8300000, guid: 267ef9397060148778d453f7640c2c30, type: 3}
+  charToggle1: {fileID: 8300000, guid: f7e34761a96f149ab8453660bce61408, type: 3}
+  charToggle2: {fileID: 8300000, guid: 9c35f5ef4de424977b6337970666745d, type: 3}
+--- !u!4 &1826085444
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1826085442}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1.63519, y: -0.73663, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1913300102
 GameObject:
   m_ObjectHideFlags: 0
@@ -3188,3 +3269,4 @@ SceneRoots:
   - {fileID: 1037451153}
   - {fileID: 1783110025}
   - {fileID: 1210813813}
+  - {fileID: 1826085444}

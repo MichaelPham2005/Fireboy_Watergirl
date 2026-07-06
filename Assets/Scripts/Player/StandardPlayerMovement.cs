@@ -27,6 +27,10 @@ public class StandardPlayerMovement : MonoBehaviour
     private Vector2 groundNormal = Vector2.up;
     private ContactPoint2D[] contacts = new ContactPoint2D[8];
 
+    // Footstep timing
+    private float footstepTimer = 0f;
+    private const float FootstepInterval = 0.35f;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -113,6 +117,22 @@ public class StandardPlayerMovement : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             isGrounded = false;
+            AudioManager.Instance?.PlayJump(playerType == PlayerType.Fireboy);
+        }
+
+        // Footsteps: play a step sound periodically while running on the ground
+        if (isGrounded && Mathf.Abs(rb.linearVelocity.x) > 1f)
+        {
+            footstepTimer -= Time.deltaTime;
+            if (footstepTimer <= 0f)
+            {
+                AudioManager.Instance?.PlaySteps();
+                footstepTimer = FootstepInterval;
+            }
+        }
+        else
+        {
+            footstepTimer = 0f; // Reset so next step plays immediately
         }
     }
 

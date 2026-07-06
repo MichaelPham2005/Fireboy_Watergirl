@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
         blueGemsCollected = 0;
         Time.timeScale = 1f;
 
+        // Start the level background music
+        AudioManager.Instance?.PlayLevelMusic();
+
         // Auto-find doors to make setup easier
         DoorController[] doors = FindObjectsByType<DoorController>(FindObjectsSortMode.None);
         foreach (DoorController door in doors)
@@ -78,6 +81,9 @@ public class GameManager : MonoBehaviour
         
         Debug.Log("Level Complete! Time: " + timeElapsed.ToString("F2"));
         Debug.Log("Red Gems: " + redGemsCollected + " | Blue Gems: " + blueGemsCollected);
+        
+        // Play win sound and music
+        AudioManager.Instance?.PlayWin();
         
         // Save the time
         SaveSystem.SaveTime(levelNameForSave, timeElapsed);
@@ -128,6 +134,9 @@ public class GameManager : MonoBehaviour
         
         Debug.Log("Game Over!");
         
+        // Play lose sound and music
+        AudioManager.Instance?.PlayLose();
+        
         // Disable players
         StandardPlayerMovement[] players = FindObjectsByType<StandardPlayerMovement>(FindObjectsSortMode.None);
         foreach (var player in players)
@@ -141,12 +150,14 @@ public class GameManager : MonoBehaviour
     public void CollectRedGem()
     {
         redGemsCollected++;
+        AudioManager.Instance?.PlayDiamond();
         Debug.Log("Red Gems: " + redGemsCollected);
     }
 
     public void CollectBlueGem()
     {
         blueGemsCollected++;
+        AudioManager.Instance?.PlayDiamond();
         Debug.Log("Blue Gems: " + blueGemsCollected);
     }
 }
