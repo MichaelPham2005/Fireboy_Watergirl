@@ -187,6 +187,34 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: GoToHome
       objectReference: {fileID: 0}
+    - target: {fileID: 4459002843939958036, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4459002843939958036, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4459002843939958036, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 636841972}
+    - target: {fileID: 4459002843939958036, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NextLevel
+      objectReference: {fileID: 0}
+    - target: {fileID: 4459002843939958036, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UIManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 4459002843939958036, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: Level_03
+      objectReference: {fileID: 0}
+    - target: {fileID: 4459002843939958036, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4600273220705687647, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
       propertyPath: m_Name
       value: MenuHandler
@@ -11028,6 +11056,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 5466106277131770268, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
+      propertyPath: levelNameForSave
+      value: Level_02
+      objectReference: {fileID: 0}
     - target: {fileID: 5823044443515468083, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
       propertyPath: levelTitleText
       value: 
@@ -11081,6 +11113,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
+--- !u!114 &636841972 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5481592736162478894, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
+  m_PrefabInstance: {fileID: 636841971}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0071875e885fec943a833e6cdccd4d41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIManager
 --- !u!4 &713922026 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7229336504806246267, guid: 81ccf175927d9ce44a777d24cbe3c4dd, type: 3}
