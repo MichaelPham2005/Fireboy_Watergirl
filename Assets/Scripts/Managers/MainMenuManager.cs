@@ -12,6 +12,8 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI level1RankText;
     public TextMeshProUGUI level2RankText;
     public TextMeshProUGUI level3RankText;
+    public TextMeshProUGUI level4RankText;
+
 
     private void Start()
     {
@@ -27,6 +29,8 @@ public class MainMenuManager : MonoBehaviour
         UpdateRankText(level1RankText, "Level_01");
         UpdateRankText(level2RankText, "Level_02");
         UpdateRankText(level3RankText, "Level_03");
+        UpdateRankText(level4RankText, "Level_04");
+
     }
 
     public void ShowMainPanel()
