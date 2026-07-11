@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -19,6 +20,41 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        // Programmatic discovery of UI elements (makes it work seamlessly on all levels without scene file edits)
+        GameObject menuHandlerGo = GameObject.Find("MenuHandler");
+        if (menuHandlerGo == null)
+        {
+            Canvas canvas = FindFirstObjectByType<Canvas>();
+            if (canvas != null) menuHandlerGo = canvas.gameObject;
+        }
+
+        if (menuHandlerGo != null)
+        {
+            if (timerText == null) timerText = FindChildComponent<TextMeshProUGUI>(menuHandlerGo, "CurrentTimerText");
+            if (gameOverPanel == null) gameOverPanel = FindChildGameObject(menuHandlerGo, "GameOverPanel");
+            if (winPanel == null) winPanel = FindChildGameObject(menuHandlerGo, "WinPanel");
+            if (currentTimeText == null) currentTimeText = FindChildComponent<TextMeshProUGUI>(menuHandlerGo, "CurrentTimer");
+            if (redGemCountText == null) redGemCountText = FindChildComponent<TextMeshProUGUI>(menuHandlerGo, "RedGemCountText");
+            if (blueGemCountText == null) blueGemCountText = FindChildComponent<TextMeshProUGUI>(menuHandlerGo, "BlueGemCountText");
+            if (rankText == null) rankText = FindChildComponent<TextMeshProUGUI>(menuHandlerGo, "RankText");
+
+            // Programmatically bind retry and home buttons to handle Level 3 & 4 button issues
+            Button[] buttons = menuHandlerGo.GetComponentsInChildren<Button>(true);
+            foreach (Button btn in buttons)
+            {
+                if (btn.name.Contains("Retry"))
+                {
+                    btn.onClick.RemoveListener(RetryLevel);
+                    btn.onClick.AddListener(RetryLevel);
+                }
+                else if (btn.name.Contains("Home"))
+                {
+                    btn.onClick.RemoveListener(GoToHome);
+                    btn.onClick.AddListener(GoToHome);
+                }
+            }
+        }
+
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
         if (winPanel != null) winPanel.SetActive(false);
 
@@ -94,6 +130,75 @@ public class UIManager : MonoBehaviour
             // Save the rank using SaveSystem
             SaveSystem.SaveRank(GameManager.Instance.levelNameForSave, rankNum);
         }
+
+        // Configure next level and home buttons dynamically based on the current level number
+        ConfigureWinPanelButtons();
+    }
+
+    private void ConfigureWinPanelButtons()
+    {
+        if (winPanel == null) return;
+
+        // Parse current level number
+        string currentScene = SceneManager.GetActiveScene().name;
+        int levelNum = 1;
+        if (currentScene.Contains("_"))
+        {
+            int.TryParse(currentScene.Substring(currentScene.IndexOf('_') + 1), out levelNum);
+        }
+
+        // Find NextLevelButton, Home button, and Retry button inside winPanel
+        Button nextBtn = FindChildComponent<Button>(winPanel, "NextLevelButton");
+        Button homeBtn = FindChildComponent<Button>(winPanel, "Home");
+        if (homeBtn == null) homeBtn = FindChildComponent<Button>(winPanel, "HomeButton");
+        Button retryBtn = FindChildComponent<Button>(winPanel, "Retry");
+        if (retryBtn == null) retryBtn = FindChildComponent<Button>(winPanel, "RetryButton");
+
+        if (levelNum >= 4)
+        {
+            // Level 4: Hide NEXT button
+            if (nextBtn != null) nextBtn.gameObject.SetActive(false);
+            
+            // Adjust RETRY button to the middle
+            if (retryBtn != null)
+            {
+                retryBtn.gameObject.SetActive(true);
+                RectTransform rt = retryBtn.GetComponent<RectTransform>();
+                if (rt != null) rt.anchoredPosition = new Vector2(0f, rt.anchoredPosition.y);
+            }
+            
+            if (homeBtn != null)
+            {
+                homeBtn.gameObject.SetActive(true);
+                TextMeshProUGUI txt = homeBtn.GetComponentInChildren<TextMeshProUGUI>();
+                if (txt != null) txt.text = "HOME";
+            }
+        }
+        else
+        {
+            // Levels 1-3: Both NEXT, RETRY, and HOME buttons active at default positions
+            if (nextBtn != null)
+            {
+                nextBtn.gameObject.SetActive(true);
+                string nextLevelName = string.Format("Level_{0:00}", levelNum + 1);
+                nextBtn.onClick.RemoveAllListeners();
+                nextBtn.onClick.AddListener(() => NextLevel(nextLevelName));
+            }
+
+            if (retryBtn != null)
+            {
+                retryBtn.gameObject.SetActive(true);
+                RectTransform rt = retryBtn.GetComponent<RectTransform>();
+                if (rt != null) rt.anchoredPosition = new Vector2(125f, rt.anchoredPosition.y);
+            }
+
+            if (homeBtn != null)
+            {
+                homeBtn.gameObject.SetActive(true);
+                TextMeshProUGUI txt = homeBtn.GetComponentInChildren<TextMeshProUGUI>();
+                if (txt != null) txt.text = "HOME";
+            }
+        }
     }
 
     // Button Functions
@@ -113,5 +218,28 @@ public class UIManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(nextLevelName);
+    }
+
+    private GameObject FindChildGameObject(GameObject parent, string name)
+    {
+        Transform[] ts = parent.GetComponentsInChildren<Transform>(true);
+        foreach (Transform t in ts)
+        {
+            if (t.gameObject.name == name)
+            {
+                return t.gameObject;
+            }
+        }
+        return null;
+    }
+
+    private T FindChildComponent<T>(GameObject parent, string name) where T : Component
+    {
+        GameObject go = FindChildGameObject(parent, name);
+        if (go != null)
+        {
+            return go.GetComponent<T>();
+        }
+        return null;
     }
 }

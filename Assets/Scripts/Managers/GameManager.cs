@@ -144,6 +144,13 @@ public class GameManager : MonoBehaviour
             player.enabled = false;
         }
 
+        StartCoroutine(LoseSequenceRoutine());
+    }
+
+    private System.Collections.IEnumerator LoseSequenceRoutine()
+    {
+        // Wait 1.5 seconds for the death animation to play
+        yield return new WaitForSeconds(1.5f);
         OnLose?.Invoke();
     }
 
