@@ -51,9 +51,17 @@ public class PlayerHealth : MonoBehaviour
         }
 
         // Only start death routine if we should die and haven't already died (movementScript is still enabled)
-        if (shouldDie && movementScript != null && movementScript.enabled)
+        if (shouldDie)
         {
-            StartCoroutine(DieWithDelay(0.1f)); 
+            Die(); 
+        }
+    }
+
+    public void Die()
+    {
+        if (movementScript != null && movementScript.enabled)
+        {
+            StartCoroutine(DieWithDelay(0.1f));
         }
     }
 
@@ -65,7 +73,7 @@ public class PlayerHealth : MonoBehaviour
         // Notify GameManager to trigger Game Over
         if (GameManager.Instance != null) GameManager.Instance.LoseGame();
 
-        // 2. Trigger the Death animation on the body, and simply HIDE the head
+        // 2. Trigger the Death animation on the body, and simply HIDE the head & accessories
         if (movementScript != null)
         {
             if (movementScript.bodyAnimator != null) 
@@ -73,6 +81,16 @@ public class PlayerHealth : MonoBehaviour
                 
             if (movementScript.headAnimator != null) 
                 movementScript.headAnimator.gameObject.SetActive(false); // Make head disappear instantly
+        }
+
+        // Hide accessories like tie and scarf
+        Transform[] allChildren = GetComponentsInChildren<Transform>(true);
+        foreach (var child in allChildren)
+        {
+            if (child.gameObject.name == "Equipped_Tie" || child.gameObject.name == "Equipped_Scarf")
+            {
+                child.gameObject.SetActive(false);
+            }
         }
 
         // 3. Wait for the slide delay (if you want them to slide down slopes while smoking)

@@ -66,7 +66,11 @@ public class ShadowGuardianAI : MonoBehaviour
         if (collision.CompareTag("Fireboy") || collision.CompareTag("Watergirl"))
         {
             Debug.Log("Game Over! Quái đã chạm vào " + collision.name);
-            // Thêm code gọi GameManager để khởi động lại Level tại đây
+            PlayerHealth health = collision.GetComponent<PlayerHealth>();
+            if (health != null)
+            {
+                health.Die();
+            }
         }
     }
 }
