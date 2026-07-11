@@ -147,15 +147,25 @@ public class UIManager : MonoBehaviour
             int.TryParse(currentScene.Substring(currentScene.IndexOf('_') + 1), out levelNum);
         }
 
-        // Find NextLevelButton and Home button inside winPanel
+        // Find NextLevelButton, Home button, and Retry button inside winPanel
         Button nextBtn = FindChildComponent<Button>(winPanel, "NextLevelButton");
         Button homeBtn = FindChildComponent<Button>(winPanel, "Home");
         if (homeBtn == null) homeBtn = FindChildComponent<Button>(winPanel, "HomeButton");
+        Button retryBtn = FindChildComponent<Button>(winPanel, "Retry");
+        if (retryBtn == null) retryBtn = FindChildComponent<Button>(winPanel, "RetryButton");
 
         if (levelNum >= 4)
         {
-            // Level 4: Only HOME button, hide NEXT button
+            // Level 4: Hide NEXT button
             if (nextBtn != null) nextBtn.gameObject.SetActive(false);
+            
+            // Adjust RETRY button to the middle
+            if (retryBtn != null)
+            {
+                retryBtn.gameObject.SetActive(true);
+                RectTransform rt = retryBtn.GetComponent<RectTransform>();
+                if (rt != null) rt.anchoredPosition = new Vector2(0f, rt.anchoredPosition.y);
+            }
             
             if (homeBtn != null)
             {
@@ -166,13 +176,20 @@ public class UIManager : MonoBehaviour
         }
         else
         {
-            // Levels 1-3: Both NEXT and HOME buttons active
+            // Levels 1-3: Both NEXT, RETRY, and HOME buttons active at default positions
             if (nextBtn != null)
             {
                 nextBtn.gameObject.SetActive(true);
                 string nextLevelName = string.Format("Level_{0:00}", levelNum + 1);
                 nextBtn.onClick.RemoveAllListeners();
                 nextBtn.onClick.AddListener(() => NextLevel(nextLevelName));
+            }
+
+            if (retryBtn != null)
+            {
+                retryBtn.gameObject.SetActive(true);
+                RectTransform rt = retryBtn.GetComponent<RectTransform>();
+                if (rt != null) rt.anchoredPosition = new Vector2(125f, rt.anchoredPosition.y);
             }
 
             if (homeBtn != null)
