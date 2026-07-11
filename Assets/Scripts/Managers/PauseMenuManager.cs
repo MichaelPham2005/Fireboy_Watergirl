@@ -9,6 +9,7 @@ public class PauseMenuManager : MonoBehaviour
     // We use a private variable here, and the script will find the object automatically
     [SerializeField] private GameObject pauseMenuPanel;
     public TextMeshProUGUI levelTitleText; 
+    private GameObject timerBackground;
 
     void Awake()
     {
@@ -36,6 +37,13 @@ public class PauseMenuManager : MonoBehaviour
 
     void Start()
     {
+        GameObject menuHandlerGo = GameObject.Find("MenuHandler");
+        if (menuHandlerGo == null)
+        {
+            Canvas canvas = FindFirstObjectByType<Canvas>();
+            if (canvas != null) menuHandlerGo = canvas.gameObject;
+        }
+
         // Programmatically find components if not assigned
         if (pauseMenuPanel != null)
         {
@@ -108,6 +116,13 @@ public class PauseMenuManager : MonoBehaviour
             string currentScene = SceneManager.GetActiveScene().name;
             levelTitleText.text = currentScene.Replace("_", " "); 
         }
+
+        // Programmatically discover TimerBackground
+        if (menuHandlerGo != null)
+        {
+            Transform t = menuHandlerGo.transform.Find("TimerBackground");
+            if (t != null) timerBackground = t.gameObject;
+        }
     }
 
     // Function to pause the game
@@ -119,6 +134,10 @@ public class PauseMenuManager : MonoBehaviour
             pauseMenuPanel.SetActive(true); // Show the menu
             Time.timeScale = 0f;            // Stop game time
         }
+        if (timerBackground != null)
+        {
+            timerBackground.SetActive(false);
+        }
     }
 
     // Function to resume the game
@@ -128,6 +147,10 @@ public class PauseMenuManager : MonoBehaviour
         {
             pauseMenuPanel.SetActive(false); // Hide the menu
             Time.timeScale = 1f;             // Resume game time
+        }
+        if (timerBackground != null)
+        {
+            timerBackground.SetActive(true);
         }
     }
 
