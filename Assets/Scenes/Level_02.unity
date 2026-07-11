@@ -12356,7 +12356,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3816905293389571131, guid: e4b3ecb2b239c414aa77b90c3f1a33b3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1701122086}
   m_SourcePrefab: {fileID: 100100000, guid: e4b3ecb2b239c414aa77b90c3f1a33b3, type: 3}
 --- !u!1 &1604644914
 GameObject:
@@ -12707,6 +12710,25 @@ Transform:
   - {fileID: 447828951}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1701122085 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3816905293389571131, guid: e4b3ecb2b239c414aa77b90c3f1a33b3, type: 3}
+  m_PrefabInstance: {fileID: 1455953810}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1701122086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701122085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d61b0342e4e2446299431c683947c8c5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WindAmbientSound
+  windClip: {fileID: 8300000, guid: 267ef9397060148778d453f7640c2c30, type: 3}
+  volume: 0.2
 --- !u!1001 &1706147166
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16404,6 +16426,7 @@ GameObject:
   - component: {fileID: 2026253393}
   - component: {fileID: 2026253392}
   - component: {fileID: 2026253391}
+  - component: {fileID: 2026253395}
   m_Layer: 0
   m_Name: seesaw-board_1
   m_TagString: Untagged
@@ -16584,6 +16607,22 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
+--- !u!114 &2026253395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026253389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 027ad52dfd05e42eaab6b2517d696713, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SeesawSound
+  seesawClip: {fileID: 8300000, guid: a3f2b237a63674b8bbeed3b1a3a908fa, type: 3}
+  volume: 0.75
+  angularSpeedThreshold: 8
+  cooldown: 0.35
 --- !u!1 &3140193276847015193
 GameObject:
   m_ObjectHideFlags: 0

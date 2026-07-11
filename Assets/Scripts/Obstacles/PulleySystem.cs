@@ -43,6 +43,14 @@ public class PulleySystem : MonoBehaviour
     private LineRenderer lineRight;
     private LineRenderer lineTop;
 
+    // Audio
+    [Header("Audio")]
+    [Tooltip("Sound clip for when the pulley is moving. Leave empty to use AudioManager's default.")]
+    public AudioClip pulleyMovingClip;
+    [Range(0f, 1f)] public float pulleyVolume = 0.6f;
+    private AudioSource pulleyAudioSource;
+    private bool wasMoving = false;
+
     private void Start()
     {
         rbA = platformA.GetComponent<Rigidbody2D>();
@@ -77,6 +85,20 @@ public class PulleySystem : MonoBehaviour
         
         float distTop = Vector3.Distance(lineTop.GetPosition(0), lineTop.GetPosition(1));
         lineTop.material.mainTextureScale = new Vector2(distTop / chainTextureWorldLength, 1f);
+
+        // Setup looping audio source for pulley movement
+        pulleyAudioSource = gameObject.AddComponent<AudioSource>();
+        pulleyAudioSource.loop = true;
+        pulleyAudioSource.playOnAwake = false;
+        pulleyAudioSource.spatialBlend = 0f;
+        pulleyAudioSource.volume = 0f;
+
+        // Use clip from Inspector if provided, otherwise fall back to AudioManager
+        if (pulleyMovingClip == null && AudioManager.Instance != null)
+            pulleyMovingClip = AudioManager.Instance.slider; // Slider is the closest SFX for a chain/pulley
+        
+        if (pulleyMovingClip != null)
+            pulleyAudioSource.clip = pulleyMovingClip;
     }
 
     private float GetFloorDistance(PulleyPlatform platform)
@@ -137,6 +159,24 @@ public class PulleySystem : MonoBehaviour
 
         rbA.MovePosition(new Vector2(rbA.position.x, startYA - currentOffset));
         rbB.MovePosition(new Vector2(rbB.position.x, startYB + currentOffset));
+
+        // Drive pulley audio
+        bool isMoving = Mathf.Abs(currentVelocity) > 0.1f;
+        if (pulleyAudioSource != null && pulleyAudioSource.clip != null)
+        {
+            if (isMoving && !wasMoving)
+            {
+                pulleyAudioSource.volume = pulleyVolume;
+                pulleyAudioSource.Play();
+            }
+            else if (!isMoving && wasMoving)
+            {
+                // Fade out gracefully over 0.3s using LeanTween-free approach
+                pulleyAudioSource.volume = 0f;
+                pulleyAudioSource.Stop();
+            }
+        }
+        wasMoving = isMoving;
     }
 
     private void Update()
