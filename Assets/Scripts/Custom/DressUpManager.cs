@@ -75,7 +75,62 @@ public class DressUpManager : MonoBehaviour
                 }
 
                 customizationSlots[0].versions = versionsList.ToArray();
-                Debug.Log($"Successfully auto-initialized {versionsList.Count} neck slots from {actualSlotName} hierarchy!");
+
+                // Đảm bảo mỗi phiên bản có SpriteRenderer để hiển thị đúng sprite và màu sắc
+                Sprite tieSprite = Resources.Load<Sprite>(isWatergirl ? "bow-tie" : "tie");
+                SpriteRenderer parentSr = slotNeckGo.GetComponentInParent<SpriteRenderer>();
+                if (parentSr == null && slotNeckGo.transform.parent != null)
+                {
+                    parentSr = slotNeckGo.transform.parent.GetComponentInChildren<SpriteRenderer>();
+                }
+
+                for (int j = 0; j < versionsList.Count; j++)
+                {
+                    GameObject versionGo = versionsList[j];
+                    if (versionGo == null) continue;
+
+                    SpriteRenderer sr = versionGo.GetComponent<SpriteRenderer>();
+                    if (sr == null)
+                    {
+                        sr = versionGo.AddComponent<SpriteRenderer>();
+                    }
+
+                    if (tieSprite != null)
+                    {
+                        sr.sprite = tieSprite;
+                    }
+
+                    if (parentSr != null)
+                    {
+                        sr.sortingLayerID = parentSr.sortingLayerID;
+                        sr.sortingOrder = parentSr.sortingOrder + 1;
+                    }
+                    else
+                    {
+                        sr.sortingOrder = 10;
+                    }
+
+                    // Đặt màu dựa trên tên hoặc index của phiên bản
+                    Color tieColor = Color.white;
+                    string nameLower = versionGo.name.ToLower();
+                    if (nameLower.Contains("white")) tieColor = Color.white;
+                    else if (nameLower.Contains("blue")) tieColor = new Color(0f, 0f, 0.867f, 1f);
+                    else if (nameLower.Contains("pink")) tieColor = new Color(1f, 0f, 0.708f, 1f);
+                    else if (nameLower.Contains("green")) tieColor = new Color(0f, 0.83f, 0.199f, 1f);
+                    else
+                    {
+                        switch (j)
+                        {
+                            case 0: tieColor = Color.white; break;
+                            case 1: tieColor = new Color(0f, 0f, 0.867f, 1f); break; // Blue
+                            case 2: tieColor = new Color(1f, 0f, 0.708f, 1f); break; // Pink
+                            case 3: tieColor = new Color(0f, 0.83f, 0.199f, 1f); break; // Green
+                        }
+                    }
+                    sr.color = tieColor;
+                }
+
+                Debug.Log($"Successfully auto-initialized {versionsList.Count} neck slots from {actualSlotName} hierarchy and configured SpriteRenderers!");
             }
             else
             {
