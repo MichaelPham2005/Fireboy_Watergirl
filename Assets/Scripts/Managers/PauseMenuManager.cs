@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro; 
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenuManager : MonoBehaviour
 {
@@ -35,6 +36,71 @@ public class PauseMenuManager : MonoBehaviour
 
     void Start()
     {
+        // Programmatically find components if not assigned
+        if (pauseMenuPanel != null)
+        {
+            if (levelTitleText == null)
+            {
+                levelTitleText = pauseMenuPanel.GetComponentInChildren<TextMeshProUGUI>(true);
+            }
+
+            // Bind Continue Button
+            Transform continueTrans = pauseMenuPanel.transform.Find("Continue");
+            if (continueTrans != null)
+            {
+                Button btn = continueTrans.GetComponent<Button>();
+                if (btn != null)
+                {
+                    btn.onClick.RemoveListener(ContinueGame);
+                    btn.onClick.AddListener(ContinueGame);
+                }
+                
+                // Ensure the button image is raycast-enabled so clicks are registered
+                Image img = continueTrans.GetComponent<Image>();
+                if (img != null)
+                {
+                    img.raycastTarget = true;
+                }
+            }
+
+            // Bind Retry Button
+            Transform retryTrans = pauseMenuPanel.transform.Find("Retry");
+            if (retryTrans != null)
+            {
+                Button btn = retryTrans.GetComponent<Button>();
+                if (btn != null)
+                {
+                    btn.onClick.RemoveListener(RetryLevel);
+                    btn.onClick.AddListener(RetryLevel);
+                }
+            }
+
+            // Bind Home Button
+            Transform homeTrans = pauseMenuPanel.transform.Find("Home");
+            if (homeTrans != null)
+            {
+                Button btn = homeTrans.GetComponent<Button>();
+                if (btn != null)
+                {
+                    btn.onClick.RemoveListener(GoToHome);
+                    btn.onClick.AddListener(GoToHome);
+                }
+            }
+        }
+
+        // Bind the main HUD settings/pause button
+        GameObject settingsBtnGo = GameObject.Find("Btn_Settings");
+        if (settingsBtnGo == null) settingsBtnGo = GameObject.Find("SettingsButton");
+        if (settingsBtnGo != null)
+        {
+            Button btn = settingsBtnGo.GetComponent<Button>();
+            if (btn != null)
+            {
+                btn.onClick.RemoveListener(PauseGame);
+                btn.onClick.AddListener(PauseGame);
+            }
+        }
+
         // Automatically set the title text when the scene starts
         if (levelTitleText != null)
         {

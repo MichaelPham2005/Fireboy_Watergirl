@@ -180,8 +180,13 @@ public class UIManager : MonoBehaviour
             else if (time <= 90f) rankNum = 2;
             else if (time <= 120f) rankNum = 3;
 
-            // Just display the number as requested
-            rankText.text = rankNum.ToString();
+            // Map numeric rank to Letter Grade (A, B, C, D)
+            string rankLetter = "D";
+            if (rankNum == 1) rankLetter = "A";
+            else if (rankNum == 2) rankLetter = "B";
+            else if (rankNum == 3) rankLetter = "C";
+
+            rankText.text = rankLetter;
             
             // Save the rank using SaveSystem
             SaveSystem.SaveRank(GameManager.Instance.levelNameForSave, rankNum);

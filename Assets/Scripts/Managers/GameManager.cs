@@ -38,6 +38,9 @@ public class GameManager : MonoBehaviour
         blueGemsCollected = 0;
         Time.timeScale = 1f;
 
+        // Auto-detect level name based on scene name
+        levelNameForSave = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
         // Start the level background music
         AudioManager.Instance?.PlayLevelMusic();
 
