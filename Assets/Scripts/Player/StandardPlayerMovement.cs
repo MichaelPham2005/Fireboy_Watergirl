@@ -36,6 +36,13 @@ public class StandardPlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
 
+        if (rb == null)
+        {
+            Debug.Log("No Rigidbody2D found. Disabling StandardPlayerMovement script for preview mode.");
+            enabled = false;
+            return;
+        }
+
         rb.gravityScale = 3f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
@@ -52,6 +59,103 @@ public class StandardPlayerMovement : MonoBehaviour
         };
         if (col != null)
             col.sharedMaterial = noFriction;
+
+        // Load character customizations for gameplay
+        LoadEquippedAccessory();
+    }
+
+    private void LoadEquippedAccessory()
+    {
+        if (playerType == PlayerType.Fireboy)
+        {
+            int equippedTie = PlayerPrefs.GetInt("FB_Tie", -1);
+            if (equippedTie < 0) return;
+
+            Sprite tieSprite = Resources.Load<Sprite>("tie");
+            if (tieSprite == null)
+            {
+                Debug.LogWarning("Tie sprite not found in Resources!");
+                return;
+            }
+
+            GameObject tieGo = new GameObject("Equipped_Tie");
+            if (bodyAnimator != null)
+                tieGo.transform.SetParent(bodyAnimator.transform, false);
+            else
+                tieGo.transform.SetParent(transform, false);
+
+            SpriteRenderer sr = tieGo.AddComponent<SpriteRenderer>();
+            sr.sprite = tieSprite;
+
+            SpriteRenderer bodySr = bodyAnimator != null ? bodyAnimator.GetComponent<SpriteRenderer>() : GetComponent<SpriteRenderer>();
+            if (bodySr != null)
+            {
+                sr.sortingLayerID = bodySr.sortingLayerID;
+                sr.sortingOrder = bodySr.sortingOrder + 1;
+            }
+            else
+            {
+                sr.sortingOrder = 10;
+            }
+
+            Color tieColor = Color.white;
+            switch (equippedTie)
+            {
+                case 0: tieColor = Color.white; break;
+                case 1: tieColor = new Color(0f, 0f, 0.867f, 1f); break; // Blue
+                case 2: tieColor = new Color(1f, 0f, 0.708f, 1f); break; // Pink
+                case 3: tieColor = new Color(0f, 0.83f, 0.199f, 1f); break; // Green
+            }
+            sr.color = tieColor;
+
+            tieGo.transform.localPosition = new Vector3(0.003f, -0.32f, 0f);
+            tieGo.transform.localScale = new Vector3(1.3f, 0.9f, 1f);
+        }
+        else if (playerType == PlayerType.Watergirl)
+        {
+            int equippedBowtie = PlayerPrefs.GetInt("WG_Tie", -1);
+            if (equippedBowtie < 0) return;
+
+            Sprite bowtieSprite = Resources.Load<Sprite>("bow-tie");
+            if (bowtieSprite == null)
+            {
+                Debug.LogWarning("Bowtie sprite not found in Resources!");
+                return;
+            }
+
+            GameObject bowtieGo = new GameObject("Equipped_Bowtie");
+            if (bodyAnimator != null)
+                bowtieGo.transform.SetParent(bodyAnimator.transform, false);
+            else
+                bowtieGo.transform.SetParent(transform, false);
+
+            SpriteRenderer sr = bowtieGo.AddComponent<SpriteRenderer>();
+            sr.sprite = bowtieSprite;
+
+            SpriteRenderer bodySr = bodyAnimator != null ? bodyAnimator.GetComponent<SpriteRenderer>() : GetComponent<SpriteRenderer>();
+            if (bodySr != null)
+            {
+                sr.sortingLayerID = bodySr.sortingLayerID;
+                sr.sortingOrder = bodySr.sortingOrder + 1;
+            }
+            else
+            {
+                sr.sortingOrder = 10;
+            }
+
+            Color bowtieColor = Color.white;
+            switch (equippedBowtie)
+            {
+                case 0: bowtieColor = Color.white; break;
+                case 1: bowtieColor = new Color(0f, 0f, 0.867f, 1f); break; // Blue
+                case 2: bowtieColor = new Color(1f, 0f, 0.708f, 1f); break; // Pink
+                case 3: bowtieColor = new Color(0f, 0.83f, 0.199f, 1f); break; // Green
+            }
+            sr.color = bowtieColor;
+
+            bowtieGo.transform.localPosition = new Vector3(0.003f, -0.2f, 0f);
+            bowtieGo.transform.localScale = new Vector3(1.1f, 1.1f, 1f);
+        }
     }
 
     void Update()

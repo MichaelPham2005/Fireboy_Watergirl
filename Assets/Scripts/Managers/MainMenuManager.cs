@@ -7,6 +7,7 @@ public class MainMenuManager : MonoBehaviour
     [Header("Panels")]
     public GameObject mainPanel;
     public GameObject rankingPanel;
+    public GameObject customPanel;
 
     [Header("Ranking UI Elements")]
     public TextMeshProUGUI level1RankText;
@@ -25,6 +26,7 @@ public class MainMenuManager : MonoBehaviour
     {
         if (mainPanel != null) mainPanel.SetActive(false);
         if (rankingPanel != null) rankingPanel.SetActive(true);
+        if (customPanel != null) customPanel.SetActive(false);
 
         UpdateRankText(level1RankText, "Level_01");
         UpdateRankText(level2RankText, "Level_02");
@@ -33,10 +35,18 @@ public class MainMenuManager : MonoBehaviour
 
     }
 
+    public void ShowCustomPanel()
+    {
+        if (mainPanel != null) mainPanel.SetActive(false);
+        if (rankingPanel != null) rankingPanel.SetActive(false);
+        if (customPanel != null) customPanel.SetActive(true);
+    }
+
     public void ShowMainPanel()
     {
         if (mainPanel != null) mainPanel.SetActive(true);
         if (rankingPanel != null) rankingPanel.SetActive(false);
+        if (customPanel != null) customPanel.SetActive(false);
     }
 
     private void UpdateRankText(TextMeshProUGUI textElement, string levelName)
