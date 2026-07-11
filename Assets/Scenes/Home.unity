@@ -6875,7 +6875,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1210813812}
         m_TargetAssemblyTypeName: MainMenuManager, Assembly-CSharp
-        m_MethodName: ShowCustomPanel
+        m_MethodName: GoToLevel
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
