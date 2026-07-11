@@ -47,6 +47,7 @@ namespace Network
             {
                 NetworkObject spawnedObj = Runner.Spawn(prefabToSpawn, spawnPos, Quaternion.identity, player);
                 spawnedCharacters.Add(player, spawnedObj);
+                Debug.Log($"PlayerSpawner: Spawned {prefabToSpawn.name} for Player {player.PlayerId} | isHost: {isHost} | InputAuth assigned: {spawnedObj.InputAuthority}");
             }
             else
             {

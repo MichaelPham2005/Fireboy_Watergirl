@@ -175,6 +175,28 @@ namespace Network
         public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
         {
             Debug.Log($"Player {player.PlayerId} joined.");
+            
+            // If we are the Host, assign input authority to the characters already in the scene
+            if (runner.IsServer)
+            {
+                var players = FindObjectsByType<StandardPlayerMovement>(FindObjectsSortMode.None);
+                foreach (var p in players)
+                {
+                    if (p.Object == null) continue; // Safety check
+                    
+                    if (p.playerType == StandardPlayerMovement.PlayerType.Fireboy && player == runner.LocalPlayer)
+                    {
+                        p.Object.AssignInputAuthority(player);
+                        Debug.Log($"Assigned Fireboy Input Authority to Host (Player {player.PlayerId})");
+                    }
+                    else if (p.playerType == StandardPlayerMovement.PlayerType.Watergirl && player != runner.LocalPlayer)
+                    {
+                        p.Object.AssignInputAuthority(player);
+                        Debug.Log($"Assigned Watergirl Input Authority to Client (Player {player.PlayerId})");
+                    }
+                }
+            }
+
             OnPlayerJoinedEvent?.Invoke(player);
             
             // Once we have 2 players, the host loads the game level!
@@ -217,9 +239,6 @@ namespace Network
             {
                 var kb = UnityEngine.InputSystem.Keyboard.current;
                 
-                // Host (Server) always plays Fireboy, use Arrow Keys (or WASD as fallback)
-                // Client always plays Watergirl, use WASD (or Arrow Keys as fallback)
-                // Since this is network input, we just read whatever they press.
                 if (kb.leftArrowKey.isPressed || kb.aKey.isPressed) data.Horizontal = -1f;
                 else if (kb.rightArrowKey.isPressed || kb.dKey.isPressed) data.Horizontal = 1f;
 

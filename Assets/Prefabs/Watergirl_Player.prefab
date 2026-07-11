@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 4101442044448624522}
   - component: {fileID: 553484959259823795}
   - component: {fileID: 7901498138867049799}
-  - component: {fileID: 8869021216656219531}
+  - component: {fileID: 7256609310115744011}
   m_Layer: 0
   m_Name: Watergirl_Player
   m_TagString: Watergirl
@@ -349,9 +349,9 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 9062119512676824554}
   - {fileID: 743791567573572984}
-  - {fileID: 8869021216656219531}
+  - {fileID: 7256609310115744011}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &8869021216656219531
+--- !u!114 &7256609310115744011
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -360,14 +360,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 4841052222631071361}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: c5e690b5fb1084f5ab1c86457af401d4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  m_EditorClassIdentifier: Fusion.Addons.Physics::Fusion.Addons.Physics.NetworkRigidbody2D
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
 --- !u!1 &5413840973193781638
 GameObject:
   m_ObjectHideFlags: 0

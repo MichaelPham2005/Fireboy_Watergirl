@@ -36,7 +36,7 @@ public class StandardPlayerMovement : NetworkBehaviour
     [Networked] public float CurrentYVelocity { get; set; }
     [Networked] public float FacingDirection { get; set; }
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
@@ -199,15 +199,7 @@ public class StandardPlayerMovement : NetworkBehaviour
 
     public override void Spawned()
     {
-        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
-        {
-            // In a pure Server-Authoritative setup without physics prediction, 
-            // the proxy clients should not run local physics.
-            if (!HasStateAuthority && rb != null)
-            {
-                rb.isKinematic = true;
-            }
-        }
+        // NetworkRigidbody2D handles proxy kinematics automatically now.
     }
 
     public override void FixedUpdateNetwork()
@@ -216,9 +208,36 @@ public class StandardPlayerMovement : NetworkBehaviour
 
         // Only the Host (State Authority) runs the actual physics simulation.
         if (!HasStateAuthority) return;
-
-        if (GetInput(out PlayerInputData data))
+        
+        // --- AUTO-ASSIGN INPUT AUTHORITY FOR SCENE OBJECTS ---
+        if (Object.InputAuthority == PlayerRef.None)
         {
+            if (playerType == PlayerType.Fireboy)
+            {
+                Object.AssignInputAuthority(Runner.LocalPlayer);
+                Debug.Log($"Auto-assigned Fireboy to Host {Runner.LocalPlayer.PlayerId}");
+            }
+            else if (playerType == PlayerType.Watergirl)
+            {
+                // Find the first client to assign Watergirl to
+                foreach (var p in Runner.ActivePlayers)
+                {
+                    if (p != Runner.LocalPlayer)
+                    {
+                        Object.AssignInputAuthority(p);
+                        Debug.Log($"Auto-assigned Watergirl to Client {p.PlayerId}");
+                        break;
+                    }
+                }
+            }
+        }
+
+        bool gotInput = GetInput(out PlayerInputData data);
+
+        if (gotInput)
+        {
+            if (data.Horizontal != 0) Debug.Log($"Moving {gameObject.name} with input: {data.Horizontal}");
+            
             UpdateGroundStateLocal(); // Use local physics for grounding
 
             bool jumpPressed = data.JumpPressed;

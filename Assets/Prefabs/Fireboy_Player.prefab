@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 5055956112139042535}
   - component: {fileID: 599149606410258340}
   - component: {fileID: 7257976618152359548}
-  - component: {fileID: 4891578764460360987}
+  - component: {fileID: 5973738161970194062}
   m_Layer: 0
   m_Name: Fireboy_Player
   m_TagString: Fireboy
@@ -265,9 +265,9 @@ MonoBehaviour:
   NetworkedBehaviours:
   - {fileID: 6733558219998101395}
   - {fileID: 3777264451169579640}
-  - {fileID: 4891578764460360987}
+  - {fileID: 5973738161970194062}
   ForceRemoteRenderTimeframe: 0
---- !u!114 &4891578764460360987
+--- !u!114 &5973738161970194062
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -276,14 +276,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 817581040903829675}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Script: {fileID: 11500000, guid: c5e690b5fb1084f5ab1c86457af401d4, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  m_EditorClassIdentifier: Fusion.Addons.Physics::Fusion.Addons.Physics.NetworkRigidbody2D
   _stateAuthorityChangeErrorCorrectionDelta: 0
   SyncScale: 0
-  SyncParent: 0
-  _autoAOIOverride: 1
-  DisableSharedModeInterpolation: 0
+  SyncParent: 1
+  _interpolationTarget: {fileID: 0}
+  UsePreciseRotation: 0
+  UseRenderSleepThresholds: 1
+  RenderThresholds:
+    UseEnergy: 1
+    Position: 0.01
+    Rotation: 0.01
+    Scale: 0.01
 --- !u!1 &1563543770320810641
 GameObject:
   m_ObjectHideFlags: 0
