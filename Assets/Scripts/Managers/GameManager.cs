@@ -63,6 +63,13 @@ public class GameManager : NetworkBehaviour
         blueGemsCollectedLocal = 0;
         Time.timeScale = 1f;
 
+        // Auto-detect level name based on scene name
+        levelNameForSave = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+
+        // Start the level background music
+        AudioManager.Instance?.PlayLevelMusic();
+
+        // Auto-find doors to make setup easier
         DoorController[] doors = FindObjectsByType<DoorController>(FindObjectsSortMode.None);
         foreach (DoorController door in doors)
         {
@@ -180,6 +187,10 @@ public class GameManager : NetworkBehaviour
         Debug.Log("Level Complete! Time: " + TimeElapsed.ToString("F2"));
         Debug.Log("Red Gems: " + RedGemsCollected + " | Blue Gems: " + BlueGemsCollected);
         
+        // Play win sound and music
+        AudioManager.Instance?.PlayWin();
+
+        // Save the time
         SaveSystem.SaveTime(levelNameForSave, TimeElapsed);
 
         StandardPlayerMovement[] players = FindObjectsByType<StandardPlayerMovement>(FindObjectsSortMode.None);
@@ -252,16 +263,28 @@ public class GameManager : NetworkBehaviour
     private void ExecuteLoseLocally()
     {
         Debug.Log("Game Over!");
+        // Play lose sound and music
+        AudioManager.Instance?.PlayLose();
+        
+        // Disable players
         StandardPlayerMovement[] players = FindObjectsByType<StandardPlayerMovement>(FindObjectsSortMode.None);
         foreach (var player in players)
         {
             player.enabled = false;
         }
+        StartCoroutine(LoseSequenceRoutine());
+    }
+
+    private System.Collections.IEnumerator LoseSequenceRoutine()
+    {
+        // Wait 1.5 seconds for the death animation to play
+        yield return new WaitForSeconds(1.5f);
         OnLose?.Invoke();
     }
 
     public void CollectRedGem()
     {
+        AudioManager.Instance?.PlayDiamond();
         if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop)
         {
             redGemsCollectedLocal++;
@@ -290,6 +313,7 @@ public class GameManager : NetworkBehaviour
 
     public void CollectBlueGem()
     {
+        AudioManager.Instance?.PlayDiamond();
         if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop)
         {
             blueGemsCollectedLocal++;

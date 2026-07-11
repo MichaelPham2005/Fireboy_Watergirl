@@ -36,10 +36,21 @@ public class StandardPlayerMovement : NetworkBehaviour
     [Networked] public float CurrentYVelocity { get; set; }
     [Networked] public float FacingDirection { get; set; }
 
+    // Footstep timing
+    private float footstepTimer = 0f;
+    private const float FootstepInterval = 0.35f;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
+
+        if (rb == null)
+        {
+            Debug.Log("No Rigidbody2D found. Disabling StandardPlayerMovement script for preview mode.");
+            enabled = false;
+            return;
+        }
 
         rb.gravityScale = 3f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -55,6 +66,102 @@ public class StandardPlayerMovement : NetworkBehaviour
         if (col != null) col.sharedMaterial = noFriction;
 
         transform.localScale = new Vector3(1f, 1f, 1f);
+
+        LoadEquippedAccessory();
+    }
+
+    private void LoadEquippedAccessory()
+    {
+        if (playerType == PlayerType.Fireboy)
+        {
+            int equippedTie = PlayerPrefs.GetInt("FB_Tie", -1);
+            if (equippedTie < 0) return;
+
+            Sprite tieSprite = Resources.Load<Sprite>("tie");
+            if (tieSprite == null)
+            {
+                Debug.LogWarning("Tie sprite not found in Resources!");
+                return;
+            }
+
+            GameObject tieGo = new GameObject("Equipped_Tie");
+            if (bodyAnimator != null)
+                tieGo.transform.SetParent(bodyAnimator.transform, false);
+            else
+                tieGo.transform.SetParent(transform, false);
+
+            SpriteRenderer sr = tieGo.AddComponent<SpriteRenderer>();
+            sr.sprite = tieSprite;
+
+            SpriteRenderer bodySr = bodyAnimator != null ? bodyAnimator.GetComponent<SpriteRenderer>() : GetComponent<SpriteRenderer>();
+            if (bodySr != null)
+            {
+                sr.sortingLayerID = bodySr.sortingLayerID;
+                sr.sortingOrder = bodySr.sortingOrder + 1;
+            }
+            else
+            {
+                sr.sortingOrder = 10;
+            }
+
+            Color tieColor = Color.white;
+            switch (equippedTie)
+            {
+                case 0: tieColor = Color.white; break;
+                case 1: tieColor = new Color(0f, 0f, 0.867f, 1f); break; // Blue
+                case 2: tieColor = new Color(1f, 0f, 0.708f, 1f); break; // Pink
+                case 3: tieColor = new Color(0f, 0.83f, 0.199f, 1f); break; // Green
+            }
+            sr.color = tieColor;
+
+            tieGo.transform.localPosition = new Vector3(0.003f, -0.32f, 0f);
+            tieGo.transform.localScale = new Vector3(1.3f, 0.9f, 1f);
+        }
+        else if (playerType == PlayerType.Watergirl)
+        {
+            int equippedBowtie = PlayerPrefs.GetInt("WG_Tie", -1);
+            if (equippedBowtie < 0) return;
+
+            Sprite bowtieSprite = Resources.Load<Sprite>("scarf");
+            if (bowtieSprite == null)
+            {
+                Debug.LogWarning("Scarf sprite not found in Resources!");
+                return;
+            }
+
+            GameObject bowtieGo = new GameObject("Equipped_Scarf");
+            if (bodyAnimator != null)
+                bowtieGo.transform.SetParent(bodyAnimator.transform, false);
+            else
+                bowtieGo.transform.SetParent(transform, false);
+
+            SpriteRenderer sr = bowtieGo.AddComponent<SpriteRenderer>();
+            sr.sprite = bowtieSprite;
+
+            SpriteRenderer bodySr = bodyAnimator != null ? bodyAnimator.GetComponent<SpriteRenderer>() : GetComponent<SpriteRenderer>();
+            if (bodySr != null)
+            {
+                sr.sortingLayerID = bodySr.sortingLayerID;
+                sr.sortingOrder = bodySr.sortingOrder + 1;
+            }
+            else
+            {
+                sr.sortingOrder = 10;
+            }
+
+            Color bowtieColor = Color.white;
+            switch (equippedBowtie)
+            {
+                case 0: bowtieColor = Color.white; break;
+                case 1: bowtieColor = new Color(0f, 0f, 0.867f, 1f); break; // Blue
+                case 2: bowtieColor = new Color(1f, 0f, 0.708f, 1f); break; // Pink
+                case 3: bowtieColor = new Color(0f, 0.83f, 0.199f, 1f); break; // Green
+            }
+            sr.color = bowtieColor;
+
+            bowtieGo.transform.localPosition = new Vector3(0.003f, -0.2f, 0f);
+            bowtieGo.transform.localScale = new Vector3(1.1f, 1.1f, 1f);
+        }
     }
 
     // --- LOCAL CO-OP LOGIC ---
@@ -69,6 +176,25 @@ public class StandardPlayerMovement : NetworkBehaviour
 
             ApplyMovementLocal(moveInput, jumpPressed);
             UpdateAnimations(Mathf.Abs(moveInput), rb.linearVelocity.y, isGroundedLocal, moveInput > 0 ? 1f : (moveInput < 0 ? -1f : 0f));
+
+            if (isGroundedLocal && Mathf.Abs(rb.linearVelocity.x) > 1f)
+            {
+                footstepTimer -= Time.deltaTime;
+                if (footstepTimer <= 0f)
+                {
+                    AudioManager.Instance?.PlaySteps();
+                    footstepTimer = FootstepInterval;
+                }
+            }
+            else
+            {
+                footstepTimer = 0f;
+            }
+
+            if (jumpPressed && isGroundedLocal)
+            {
+                AudioManager.Instance?.PlayJump(playerType == PlayerType.Fireboy);
+            }
         }
     }
 
@@ -259,6 +385,21 @@ public class StandardPlayerMovement : NetworkBehaviour
         {
             UpdateAnimations(CurrentSpeed, CurrentYVelocity, IsGrounded, FacingDirection);
 
+            // Network Footsteps
+            if (IsGrounded && CurrentSpeed > 0.1f)
+            {
+                footstepTimer -= Time.deltaTime;
+                if (footstepTimer <= 0f)
+                {
+                    AudioManager.Instance?.PlaySteps();
+                    footstepTimer = FootstepInterval;
+                }
+            }
+            else
+            {
+                footstepTimer = 0f;
+            }
+
             // Trigger camera setup once if we are the local player
             if (HasInputAuthority && Camera.main != null)
             {
@@ -302,6 +443,7 @@ public class StandardPlayerMovement : NetworkBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             isGroundedLocal = false;
+            AudioManager.Instance?.PlayJump(playerType == PlayerType.Fireboy);
         }
     }
 
@@ -359,6 +501,15 @@ public class StandardPlayerMovement : NetworkBehaviour
         {
             SpriteRenderer headSprite = headAnimator.GetComponent<SpriteRenderer>();
             if (headSprite != null) headSprite.enabled = false;
+        }
+        // Hide accessories like tie and scarf so they don't show on the player's back
+        Transform[] allChildren = GetComponentsInChildren<Transform>(true);
+        foreach (var child in allChildren)
+        {
+            if (child.gameObject.name == "Equipped_Tie" || child.gameObject.name == "Equipped_Scarf")
+            {
+                child.gameObject.SetActive(false);
+            }
         }
         this.enabled = false;
     }

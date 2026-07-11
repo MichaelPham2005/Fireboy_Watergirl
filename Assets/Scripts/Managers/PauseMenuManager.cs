@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using Fusion;
 using Network;
+using UnityEngine.UI;
 
 public class PauseMenuManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class PauseMenuManager : MonoBehaviour
     // We use a private variable here, and the script will find the object automatically
     [SerializeField] private GameObject pauseMenuPanel;
     public TextMeshProUGUI levelTitleText; 
+    private GameObject timerBackground;
 
     private bool isPausedLocally = false;
 
@@ -39,12 +41,91 @@ public class PauseMenuManager : MonoBehaviour
 
     void Start()
     {
+        GameObject menuHandlerGo = GameObject.Find("MenuHandler");
+        if (menuHandlerGo == null)
+        {
+            Canvas canvas = FindFirstObjectByType<Canvas>();
+            if (canvas != null) menuHandlerGo = canvas.gameObject;
+        }
+
+        // Programmatically find components if not assigned
+        if (pauseMenuPanel != null)
+        {
+            if (levelTitleText == null)
+            {
+                levelTitleText = pauseMenuPanel.GetComponentInChildren<TextMeshProUGUI>(true);
+            }
+
+            // Bind Continue Button
+            Transform continueTrans = pauseMenuPanel.transform.Find("Continue");
+            if (continueTrans != null)
+            {
+                Button btn = continueTrans.GetComponent<Button>();
+                if (btn != null)
+                {
+                    btn.onClick.RemoveListener(ContinueGame);
+                    btn.onClick.AddListener(ContinueGame);
+                }
+                
+                // Ensure the button image is raycast-enabled so clicks are registered
+                Image img = continueTrans.GetComponent<Image>();
+                if (img != null)
+                {
+                    img.raycastTarget = true;
+                }
+            }
+
+            // Bind Retry Button
+            Transform retryTrans = pauseMenuPanel.transform.Find("Retry");
+            if (retryTrans != null)
+            {
+                Button btn = retryTrans.GetComponent<Button>();
+                if (btn != null)
+                {
+                    btn.onClick.RemoveListener(RetryLevel);
+                    btn.onClick.AddListener(RetryLevel);
+                }
+            }
+
+            // Bind Home Button
+            Transform homeTrans = pauseMenuPanel.transform.Find("Home");
+            if (homeTrans != null)
+            {
+                Button btn = homeTrans.GetComponent<Button>();
+                if (btn != null)
+                {
+                    btn.onClick.RemoveListener(GoToHome);
+                    btn.onClick.AddListener(GoToHome);
+                }
+            }
+        }
+
+        // Bind the main HUD settings/pause button
+        GameObject settingsBtnGo = GameObject.Find("Btn_Settings");
+        if (settingsBtnGo == null) settingsBtnGo = GameObject.Find("SettingsButton");
+        if (settingsBtnGo != null)
+        {
+            Button btn = settingsBtnGo.GetComponent<Button>();
+            if (btn != null)
+            {
+                btn.onClick.RemoveListener(PauseGame);
+                btn.onClick.AddListener(PauseGame);
+            }
+        }
+
         // Automatically set the title text when the scene starts
         if (levelTitleText != null)
         {
             // Get current scene name and replace underscore with a space for better formatting
             string currentScene = SceneManager.GetActiveScene().name;
             levelTitleText.text = currentScene.Replace("_", " "); 
+        }
+
+        // Programmatically discover TimerBackground
+        if (menuHandlerGo != null)
+        {
+            Transform t = menuHandlerGo.transform.Find("TimerBackground");
+            if (t != null) timerBackground = t.gameObject;
         }
     }
 
@@ -69,6 +150,10 @@ public class PauseMenuManager : MonoBehaviour
                 SuppressLocalInput(true);
             }
         }
+        if (timerBackground != null)
+        {
+            timerBackground.SetActive(false);
+        }
     }
 
     // Function to resume the game
@@ -87,6 +172,10 @@ public class PauseMenuManager : MonoBehaviour
                 isPausedLocally = false;
                 SuppressLocalInput(false);
             }
+        }
+        if (timerBackground != null)
+        {
+            timerBackground.SetActive(true);
         }
     }
 

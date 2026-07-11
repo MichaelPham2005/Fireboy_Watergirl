@@ -38,7 +38,7 @@ public class PlayerHealth : NetworkBehaviour
                 case nameof(IsDead):
                     if (IsDead)
                     {
-                        StartCoroutine(DieWithDelay(0.1f));
+                        Die();
                     }
                     break;
             }
@@ -97,8 +97,16 @@ public class PlayerHealth : NetworkBehaviour
             }
             else
             {
-                StartCoroutine(DieWithDelay(0.1f)); 
+                Die(); 
             }
+        }
+    }
+
+    public void Die()
+    {
+        if (movementScript != null && movementScript.enabled)
+        {
+            StartCoroutine(DieWithDelay(0.1f));
         }
     }
 
@@ -110,7 +118,7 @@ public class PlayerHealth : NetworkBehaviour
         // Notify GameManager to trigger Game Over
         if (GameManager.Instance != null) GameManager.Instance.LoseGame();
 
-        // 2. Trigger the Death animation on the body, and simply HIDE the head
+        // 2. Trigger the Death animation on the body, and simply HIDE the head & accessories
         if (movementScript != null)
         {
             if (movementScript.bodyAnimator != null) 
@@ -118,6 +126,16 @@ public class PlayerHealth : NetworkBehaviour
                 
             if (movementScript.headAnimator != null) 
                 movementScript.headAnimator.gameObject.SetActive(false); // Make head disappear instantly
+        }
+
+        // Hide accessories like tie and scarf
+        Transform[] allChildren = GetComponentsInChildren<Transform>(true);
+        foreach (var child in allChildren)
+        {
+            if (child.gameObject.name == "Equipped_Tie" || child.gameObject.name == "Equipped_Scarf")
+            {
+                child.gameObject.SetActive(false);
+            }
         }
 
         // 3. Wait for the slide delay (if you want them to slide down slopes while smoking)
