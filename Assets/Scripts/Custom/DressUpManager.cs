@@ -59,7 +59,7 @@ public class DressUpManager : MonoBehaviour
                 customizationSlots = new AccessorySlot[1];
                 customizationSlots[0] = new AccessorySlot
                 {
-                    slotName = isWatergirl ? "Bowtie" : "Tie",
+                    slotName = isWatergirl ? "Scarf" : "Tie",
                     prefsKey = isWatergirl ? "WG_Tie" : "FB_Tie"
                 };
 
@@ -77,7 +77,7 @@ public class DressUpManager : MonoBehaviour
                 customizationSlots[0].versions = versionsList.ToArray();
 
                 // Đảm bảo mỗi phiên bản có SpriteRenderer để hiển thị đúng sprite và màu sắc
-                Sprite tieSprite = Resources.Load<Sprite>(isWatergirl ? "bow-tie" : "tie");
+                Sprite tieSprite = Resources.Load<Sprite>(isWatergirl ? "scarf" : "tie");
                 SpriteRenderer parentSr = slotNeckGo.GetComponentInParent<SpriteRenderer>();
                 if (parentSr == null && slotNeckGo.transform.parent != null)
                 {
@@ -191,7 +191,7 @@ public class DressUpManager : MonoBehaviour
         if (tieSlot == null || tieSlot.versions == null) return;
 
         bool isWatergirl = targetSlotName.ToLower().Contains("watergirl");
-        Sprite tieSprite = Resources.Load<Sprite>(isWatergirl ? "bow-tie" : "tie");
+        Sprite tieSprite = Resources.Load<Sprite>(isWatergirl ? "scarf" : "tie");
 
         for (int j = 0; j < tieSlot.versions.Length; j++)
         {
@@ -200,7 +200,7 @@ public class DressUpManager : MonoBehaviour
 
             // Nhân bản template
             GameObject newButtonGo = Instantiate(templateTransform.gameObject, transform);
-            newButtonGo.name = (isWatergirl ? "Btn_Bowtie_" : "Btn_Tie_") + versionGo.name;
+            newButtonGo.name = (isWatergirl ? "Btn_Scarf_" : "Btn_Tie_") + versionGo.name;
             newButtonGo.SetActive(true);
 
             // Gán hoặc thêm component EquipButton
@@ -345,7 +345,7 @@ public class DressUpManager : MonoBehaviour
 
         AccessorySlot tieSlot = customizationSlots[0];
         bool isWatergirl = targetSlotName.ToLower().Contains("watergirl");
-        Sprite tieSprite = AssetDatabase.LoadAssetAtPath<Sprite>(isWatergirl ? "Assets/Resources/bow-tie.png" : "Assets/Resources/tie.png");
+        Sprite tieSprite = AssetDatabase.LoadAssetAtPath<Sprite>(isWatergirl ? "Assets/Resources/scarf.png" : "Assets/Resources/tie.png");
 
         for (int j = 0; j < tieSlot.versions.Length; j++)
         {
@@ -363,7 +363,7 @@ public class DressUpManager : MonoBehaviour
                 newButtonGo.transform.SetParent(transform, false);
             }
 
-            newButtonGo.name = (isWatergirl ? "Btn_Bowtie_" : "Btn_Tie_") + versionGo.name;
+            newButtonGo.name = (isWatergirl ? "Btn_Scarf_" : "Btn_Tie_") + versionGo.name;
             newButtonGo.SetActive(true);
 
             // Ghi nhận Undo

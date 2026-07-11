@@ -116,14 +116,14 @@ public class StandardPlayerMovement : MonoBehaviour
             int equippedBowtie = PlayerPrefs.GetInt("WG_Tie", -1);
             if (equippedBowtie < 0) return;
 
-            Sprite bowtieSprite = Resources.Load<Sprite>("bow-tie");
+            Sprite bowtieSprite = Resources.Load<Sprite>("scarf");
             if (bowtieSprite == null)
             {
-                Debug.LogWarning("Bowtie sprite not found in Resources!");
+                Debug.LogWarning("Scarf sprite not found in Resources!");
                 return;
             }
 
-            GameObject bowtieGo = new GameObject("Equipped_Bowtie");
+            GameObject bowtieGo = new GameObject("Equipped_Scarf");
             if (bodyAnimator != null)
                 bowtieGo.transform.SetParent(bodyAnimator.transform, false);
             else
