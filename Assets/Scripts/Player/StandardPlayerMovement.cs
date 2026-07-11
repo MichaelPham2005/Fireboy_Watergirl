@@ -431,6 +431,16 @@ public class StandardPlayerMovement : MonoBehaviour
             SpriteRenderer headSprite = headAnimator.GetComponent<SpriteRenderer>();
             if (headSprite != null) headSprite.enabled = false;
         }
+
+        // Hide accessories like tie and scarf so they don't show on the player's back
+        Transform[] allChildren = GetComponentsInChildren<Transform>(true);
+        foreach (var child in allChildren)
+        {
+            if (child.gameObject.name == "Equipped_Tie" || child.gameObject.name == "Equipped_Scarf")
+            {
+                child.gameObject.SetActive(false);
+            }
+        }
         
         // Stop accepting input
         this.enabled = false;

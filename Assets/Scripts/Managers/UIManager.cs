@@ -130,6 +130,58 @@ public class UIManager : MonoBehaviour
             // Save the rank using SaveSystem
             SaveSystem.SaveRank(GameManager.Instance.levelNameForSave, rankNum);
         }
+
+        // Configure next level and home buttons dynamically based on the current level number
+        ConfigureWinPanelButtons();
+    }
+
+    private void ConfigureWinPanelButtons()
+    {
+        if (winPanel == null) return;
+
+        // Parse current level number
+        string currentScene = SceneManager.GetActiveScene().name;
+        int levelNum = 1;
+        if (currentScene.Contains("_"))
+        {
+            int.TryParse(currentScene.Substring(currentScene.IndexOf('_') + 1), out levelNum);
+        }
+
+        // Find NextLevelButton and Home button inside winPanel
+        Button nextBtn = FindChildComponent<Button>(winPanel, "NextLevelButton");
+        Button homeBtn = FindChildComponent<Button>(winPanel, "Home");
+        if (homeBtn == null) homeBtn = FindChildComponent<Button>(winPanel, "HomeButton");
+
+        if (levelNum >= 4)
+        {
+            // Level 4: Only HOME button, hide NEXT button
+            if (nextBtn != null) nextBtn.gameObject.SetActive(false);
+            
+            if (homeBtn != null)
+            {
+                homeBtn.gameObject.SetActive(true);
+                TextMeshProUGUI txt = homeBtn.GetComponentInChildren<TextMeshProUGUI>();
+                if (txt != null) txt.text = "HOME";
+            }
+        }
+        else
+        {
+            // Levels 1-3: Both NEXT and HOME buttons active
+            if (nextBtn != null)
+            {
+                nextBtn.gameObject.SetActive(true);
+                string nextLevelName = string.Format("Level_{0:00}", levelNum + 1);
+                nextBtn.onClick.RemoveAllListeners();
+                nextBtn.onClick.AddListener(() => NextLevel(nextLevelName));
+            }
+
+            if (homeBtn != null)
+            {
+                homeBtn.gameObject.SetActive(true);
+                TextMeshProUGUI txt = homeBtn.GetComponentInChildren<TextMeshProUGUI>();
+                if (txt != null) txt.text = "HOME";
+            }
+        }
     }
 
     // Button Functions
