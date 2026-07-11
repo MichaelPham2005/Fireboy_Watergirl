@@ -1,18 +1,48 @@
 using UnityEngine;
-using System.Collections; // Cần dòng này để dùng Coroutine
+using System.Collections;
+using Fusion;
+using Network;
 
-public class PlayerHealth : MonoBehaviour
+public class PlayerHealth : NetworkBehaviour
 {
     [Header("Components")]
     public StandardPlayerMovement movementScript;
     private Rigidbody2D rb;
     private SpriteRenderer sr;
 
+    [Networked] public NetworkBool IsDead { get; set; }
+    private ChangeDetector _changes;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         sr = GetComponentInChildren<SpriteRenderer>();
         if (movementScript == null) movementScript = GetComponent<StandardPlayerMovement>();
+    }
+
+    public override void Spawned()
+    {
+        _changes = GetChangeDetector(ChangeDetector.Source.SimulationState);
+        if (HasStateAuthority)
+        {
+            IsDead = false;
+        }
+    }
+
+    public override void Render()
+    {
+        foreach (var change in _changes.DetectChanges(this, out var previousBuffer, out var currentBuffer))
+        {
+            switch (change)
+            {
+                case nameof(IsDead):
+                    if (IsDead)
+                    {
+                        StartCoroutine(DieWithDelay(0.1f));
+                    }
+                    break;
+            }
+        }
     }
 
     void OnTriggerEnter2D(Collider2D col)
@@ -35,6 +65,15 @@ public class PlayerHealth : MonoBehaviour
 
     private void CheckDeath(PoolElement pool)
     {
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
+        {
+            if (!HasStateAuthority || IsDead) return;
+        }
+        else
+        {
+            if (movementScript != null && !movementScript.enabled) return;
+        }
+
         bool shouldDie = false;
 
         // Fireboy dies in Water and Goo
@@ -50,10 +89,16 @@ public class PlayerHealth : MonoBehaviour
                 shouldDie = true;
         }
 
-        // Only start death routine if we should die and haven't already died (movementScript is still enabled)
-        if (shouldDie && movementScript != null && movementScript.enabled)
+        if (shouldDie)
         {
-            StartCoroutine(DieWithDelay(0.1f)); 
+            if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
+            {
+                IsDead = true;
+            }
+            else
+            {
+                StartCoroutine(DieWithDelay(0.1f)); 
+            }
         }
     }
 
@@ -81,8 +126,5 @@ public class PlayerHealth : MonoBehaviour
         // 4. Stop physics simulation completely
         Debug.Log(gameObject.name + " evaporated!");
         if (rb != null) rb.simulated = false;
-        
-        // NOTE: We no longer disable the SpriteRenderer here (sr.enabled = false).
-        // The Death animation clip will handle fading out or hiding the sprite.
     }
 }

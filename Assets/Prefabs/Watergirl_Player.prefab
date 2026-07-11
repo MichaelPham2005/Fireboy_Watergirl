@@ -130,6 +130,8 @@ GameObject:
   - component: {fileID: 743791567573572984}
   - component: {fileID: 4101442044448624522}
   - component: {fileID: 553484959259823795}
+  - component: {fileID: 7901498138867049799}
+  - component: {fileID: 8869021216656219531}
   m_Layer: 0
   m_Name: Watergirl_Player
   m_TagString: Watergirl
@@ -203,6 +205,11 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
+  _IsGrounded:
+    _value: 0
+  _CurrentSpeed: 0
+  _CurrentYVelocity: 0
+  _FacingDirection: 0
 --- !u!61 &5089726480323787844
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -262,6 +269,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   movementScript: {fileID: 0}
+  _IsDead:
+    _value: 0
 --- !u!70 &4101442044448624522
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -321,6 +330,44 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7901498138867049799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4841052222631071361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 2655139341
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 9062119512676824554}
+  - {fileID: 743791567573572984}
+  - {fileID: 8869021216656219531}
+  ForceRemoteRenderTimeframe: 0
+--- !u!114 &8869021216656219531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4841052222631071361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &5413840973193781638
 GameObject:
   m_ObjectHideFlags: 0

@@ -46,6 +46,8 @@ GameObject:
   - component: {fileID: 3777264451169579640}
   - component: {fileID: 5055956112139042535}
   - component: {fileID: 599149606410258340}
+  - component: {fileID: 7257976618152359548}
+  - component: {fileID: 4891578764460360987}
   m_Layer: 0
   m_Name: Fireboy_Player
   m_TagString: Fireboy
@@ -119,6 +121,11 @@ MonoBehaviour:
   groundLayer:
     serializedVersion: 2
     m_Bits: 1
+  _IsGrounded:
+    _value: 0
+  _CurrentSpeed: 0
+  _CurrentYVelocity: 0
+  _FacingDirection: 0
 --- !u!61 &4858813278298279053
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -178,6 +185,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   movementScript: {fileID: 0}
+  _IsDead:
+    _value: 0
 --- !u!70 &5055956112139042535
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -237,6 +246,44 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &7257976618152359548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817581040903829675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 401784831
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 6733558219998101395}
+  - {fileID: 3777264451169579640}
+  - {fileID: 4891578764460360987}
+  ForceRemoteRenderTimeframe: 0
+--- !u!114 &4891578764460360987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 817581040903829675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!1 &1563543770320810641
 GameObject:
   m_ObjectHideFlags: 0

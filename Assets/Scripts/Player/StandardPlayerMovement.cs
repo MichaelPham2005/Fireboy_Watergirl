@@ -1,6 +1,9 @@
 using UnityEngine;
+using Fusion;
+using Fusion.Sockets;
+using Network;
 
-public class StandardPlayerMovement : MonoBehaviour
+public class StandardPlayerMovement : NetworkBehaviour
 {
     public enum PlayerType { Fireboy, Watergirl }
 
@@ -21,13 +24,19 @@ public class StandardPlayerMovement : MonoBehaviour
     public Transform groundCheck;
     public float groundCheckRadius = 0.25f;
     public LayerMask groundLayer;
-    private bool isGrounded;
 
-    // Internal: track the surface normal of what we're standing on
+    // --- State ---
+    private bool isGroundedLocal;
     private Vector2 groundNormal = Vector2.up;
     private ContactPoint2D[] contacts = new ContactPoint2D[8];
 
-    void Start()
+    // --- Networked State ---
+    [Networked] public NetworkBool IsGrounded { get; set; }
+    [Networked] public float CurrentSpeed { get; set; }
+    [Networked] public float CurrentYVelocity { get; set; }
+    [Networked] public float FacingDirection { get; set; }
+
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
@@ -35,90 +44,85 @@ public class StandardPlayerMovement : MonoBehaviour
         rb.gravityScale = 3f;
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
 
-        // Fallback: if no ground layer assigned in Inspector, use Default
         if (((int)groundLayer) == 0)
             groundLayer = LayerMask.GetMask("Default");
 
-        // Create zero-friction physics material at runtime
-        // This removes the dependency on external .physicsMaterial2D asset files
         PhysicsMaterial2D noFriction = new PhysicsMaterial2D("Player_NoFriction")
         {
             friction = 0f,
             bounciness = 0f
         };
-        if (col != null)
-            col.sharedMaterial = noFriction;
+        if (col != null) col.sharedMaterial = noFriction;
+
+        transform.localScale = new Vector3(1f, 1f, 1f);
     }
 
-    void Update()
+    // --- LOCAL CO-OP LOGIC ---
+    private void Update()
     {
-        UpdateGroundState();
-
-        float moveInput = GetHorizontalInput();
-        bool jumpPressed = GetJumpInput();
-
-        ApplyMovement(moveInput);
-
-        // Animation
-        if (bodyAnimator != null)
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop)
         {
-            bodyAnimator.SetFloat("Speed", Mathf.Abs(moveInput));
-            bodyAnimator.SetFloat("yVelocity", rb.linearVelocity.y);
-            bodyAnimator.SetBool("IsGrounded", isGrounded);
-        }
-        
-        if (headAnimator != null)
-        {
-            headAnimator.SetFloat("Speed", Mathf.Abs(moveInput));
-            headAnimator.SetFloat("yVelocity", rb.linearVelocity.y);
-            headAnimator.SetBool("IsGrounded", isGrounded);
+            UpdateGroundStateLocal();
 
-            // Smoothly tilt the head based on vertical velocity when in the air
-            float targetZRotation = 0f;
-            
-            // ONLY tilt if we have horizontal speed (i.e. moving jump). 
-            // If jumping straight up (Speed < 0.1), keep the head perfectly stable (0 rotation).
-            if (!isGrounded && Mathf.Abs(rb.linearVelocity.x) > 0.1f)
-            {
-                // Multiply y velocity to get an angle, clamp it so it doesn't rotate too far
-                targetZRotation = Mathf.Clamp(rb.linearVelocity.y * 2.5f, -35f, 35f);
-            }
-            
-            // Lerp the rotation for a smooth "curved" motion
-            Quaternion targetRot = Quaternion.Euler(0, 0, targetZRotation);
-            headAnimator.transform.localRotation = Quaternion.Lerp(
-                headAnimator.transform.localRotation, 
-                targetRot, 
-                Time.deltaTime * 12f
-            );
+            float moveInput = GetHorizontalInputLocal();
+            bool jumpPressed = GetJumpInputLocal();
 
-            // --- DEBUG: Log head animator state every 0.5 second ---
-            if (Time.frameCount % 30 == 0)
-            {
-                var stateInfo = headAnimator.GetCurrentAnimatorStateInfo(0);
-                var headSR = headAnimator.GetComponent<SpriteRenderer>();
-                string spriteName = headSR != null && headSR.sprite != null ? headSR.sprite.name : "NULL";
-                
-            }
-        }
-
-        // Flip sprite direction
-        if (moveInput > 0f)
-            transform.localScale = new Vector3(1f, 1f, 1f);
-        else if (moveInput < 0f)
-            transform.localScale = new Vector3(-1f, 1f, 1f);
-
-        // Jump: ONLY when grounded AND not moving upward
-        if (jumpPressed && isGrounded)
-        {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-            isGrounded = false;
+            ApplyMovementLocal(moveInput, jumpPressed);
+            UpdateAnimations(Mathf.Abs(moveInput), rb.linearVelocity.y, isGroundedLocal, moveInput > 0 ? 1f : (moveInput < 0 ? -1f : 0f));
         }
     }
 
-    private void ApplyMovement(float moveInput)
+    private float GetHorizontalInputLocal()
     {
-        bool onSlope = isGrounded && groundNormal.y < 0.99f && groundNormal.y > 0f;
+        float input = 0f;
+        if (UnityEngine.InputSystem.Keyboard.current != null)
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (playerType == PlayerType.Fireboy)
+            {
+                if (kb.leftArrowKey.isPressed) input = -1f;
+                else if (kb.rightArrowKey.isPressed) input = 1f;
+            }
+            else
+            {
+                if (kb.aKey.isPressed) input = -1f;
+                else if (kb.dKey.isPressed) input = 1f;
+            }
+        }
+        else
+        {
+            if (playerType == PlayerType.Fireboy)
+            {
+                if (Input.GetKey(KeyCode.LeftArrow)) input = -1f;
+                else if (Input.GetKey(KeyCode.RightArrow)) input = 1f;
+            }
+            else
+            {
+                if (Input.GetKey(KeyCode.A)) input = -1f;
+                else if (Input.GetKey(KeyCode.D)) input = 1f;
+            }
+        }
+        return input;
+    }
+
+    private bool GetJumpInputLocal()
+    {
+        if (UnityEngine.InputSystem.Keyboard.current != null)
+        {
+            var kb = UnityEngine.InputSystem.Keyboard.current;
+            if (playerType == PlayerType.Fireboy && kb.upArrowKey.wasPressedThisFrame) return true;
+            if (playerType == PlayerType.Watergirl && kb.wKey.wasPressedThisFrame) return true;
+        }
+
+        if (playerType == PlayerType.Fireboy && Input.GetKeyDown(KeyCode.UpArrow)) return true;
+        if (playerType == PlayerType.Watergirl && Input.GetKeyDown(KeyCode.W)) return true;
+
+        return false;
+    }
+
+    private void ApplyMovementLocal(float moveInput, bool jumpPressed)
+    {
+        bool onSlope = isGroundedLocal && groundNormal.y < 0.99f && groundNormal.y > 0f;
 
         if (!Mathf.Approximately(moveInput, 0f))
         {
@@ -134,27 +138,27 @@ public class StandardPlayerMovement : MonoBehaviour
                 rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
             }
         }
-        else if (isGrounded)
+        else if (isGroundedLocal)
         {
             if (!onSlope)
             {
-                // Brake on flat ground only
                 float brakingX = Mathf.MoveTowards(rb.linearVelocity.x, 0f, moveSpeed * 8f * Time.deltaTime);
                 rb.linearVelocity = new Vector2(brakingX, rb.linearVelocity.y);
             }
-            // If on a slope and no input, do nothing.
-            // This allows gravity and 0 friction to slide the player down naturally.
+        }
+
+        if (jumpPressed && isGroundedLocal)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            isGroundedLocal = false;
         }
     }
 
-    private void UpdateGroundState()
+    private void UpdateGroundStateLocal()
     {
-        // 1. VELOCITY-BASED DOUBLE JUMP PREVENTION
-        // If upward velocity exceeds normal slope walking speeds (e.g. > 5.6), 
-        // the player MUST have jumped. Force isGrounded = false.
         if (rb.linearVelocity.y > moveSpeed * 0.8f)
         {
-            isGrounded = false;
+            isGroundedLocal = false;
             groundNormal = Vector2.up;
             return;
         }
@@ -162,11 +166,10 @@ public class StandardPlayerMovement : MonoBehaviour
         groundNormal = Vector2.up;
         bool foundGround = false;
 
-        // 2. CHECK PHYSICS CONTACTS
         int count = rb.GetContacts(contacts);
         for (int i = 0; i < count; i++)
         {
-            if (contacts[i].normal.y > 0.5f) // Threshold 0.5 allows up to 60-degree slopes
+            if (contacts[i].normal.y > 0.5f)
             {
                 foundGround = true;
                 groundNormal = contacts[i].normal;
@@ -174,16 +177,11 @@ public class StandardPlayerMovement : MonoBehaviour
             }
         }
 
-        // 3. OVERLAPCIRCLE FALLBACK (Crucial Fix)
-        // If we still didn't find ground, use the circle check.
         if (!foundGround && groundCheck != null)
         {
             Collider2D[] hits = Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius, groundLayer);
             foreach (Collider2D hit in hits)
             {
-                // BUG FIX: Ignore the player's OWN collider!
-                // Previously, the circle was detecting the player's CapsuleCollider 
-                // causing them to ALWAYS be "grounded" even in mid-air.
                 if (hit.gameObject != gameObject && !hit.transform.IsChildOf(transform))
                 {
                     foundGround = true;
@@ -193,122 +191,156 @@ public class StandardPlayerMovement : MonoBehaviour
             }
         }
 
-        isGrounded = foundGround;
+        isGroundedLocal = foundGround;
     }
 
-    private float GetHorizontalInput()
-    {
-        float input = 0f;
 
-        // 1. New Input System
-        if (UnityEngine.InputSystem.Keyboard.current != null)
+    // --- ONLINE MULTIPLAYER LOGIC (FUSION) ---
+
+    public override void Spawned()
+    {
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
         {
-            var kb = UnityEngine.InputSystem.Keyboard.current;
-            if (playerType == PlayerType.Fireboy)
+            // In a pure Server-Authoritative setup without physics prediction, 
+            // the proxy clients should not run local physics.
+            if (!HasStateAuthority && rb != null)
             {
-                if (kb.leftArrowKey.isPressed) input = -1f;
-                else if (kb.rightArrowKey.isPressed) input = 1f;
+                rb.isKinematic = true;
+            }
+        }
+    }
+
+    public override void FixedUpdateNetwork()
+    {
+        if (GameModeManager.CurrentMode != GameModeManager.GameMode.OnlineMultiplayer) return;
+
+        // Only the Host (State Authority) runs the actual physics simulation.
+        if (!HasStateAuthority) return;
+
+        if (GetInput(out PlayerInputData data))
+        {
+            UpdateGroundStateLocal(); // Use local physics for grounding
+
+            bool jumpPressed = data.JumpPressed;
+            ApplyMovementNetwork(data.Horizontal, jumpPressed);
+
+            // Sync state for remote players to render properly
+            IsGrounded = isGroundedLocal;
+            CurrentSpeed = Mathf.Abs(data.Horizontal);
+            CurrentYVelocity = rb.linearVelocity.y;
+            
+            if (data.Horizontal > 0) FacingDirection = 1f;
+            else if (data.Horizontal < 0) FacingDirection = -1f;
+        }
+    }
+
+    public override void Render()
+    {
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
+        {
+            UpdateAnimations(CurrentSpeed, CurrentYVelocity, IsGrounded, FacingDirection);
+
+            // Trigger camera setup once if we are the local player
+            if (HasInputAuthority && Camera.main != null)
+            {
+                var camFollow = Camera.main.GetComponent<NetworkCameraFollow>();
+                if (camFollow != null && camFollow.target != transform)
+                {
+                    camFollow.SetTarget(transform);
+                }
+            }
+        }
+    }
+
+    private void ApplyMovementNetwork(float moveInput, bool jumpPressed)
+    {
+        bool onSlope = isGroundedLocal && groundNormal.y < 0.99f && groundNormal.y > 0f;
+
+        if (!Mathf.Approximately(moveInput, 0f))
+        {
+            if (onSlope)
+            {
+                Vector2 moveDir = new Vector2(moveInput, 0f);
+                Vector2 slopeMove = Vector3.ProjectOnPlane(moveDir, groundNormal).normalized * moveSpeed;
+                float targetY = (slopeMove.y > 0f) ? slopeMove.y : rb.linearVelocity.y;
+                rb.linearVelocity = new Vector2(slopeMove.x, targetY);
             }
             else
             {
-                if (kb.aKey.isPressed) input = -1f;
-                else if (kb.dKey.isPressed) input = 1f;
+                rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
             }
         }
-
-        // 2. Legacy Input System fallback
-        if (Mathf.Approximately(input, 0f))
+        else if (isGroundedLocal)
         {
-            if (playerType == PlayerType.Fireboy)
+            if (!onSlope)
             {
-                if (Input.GetKey(KeyCode.LeftArrow)) input = -1f;
-                else if (Input.GetKey(KeyCode.RightArrow)) input = 1f;
-            }
-            else
-            {
-                if (Input.GetKey(KeyCode.A)) input = -1f;
-                else if (Input.GetKey(KeyCode.D)) input = 1f;
+                float brakingX = Mathf.MoveTowards(rb.linearVelocity.x, 0f, moveSpeed * 8f * Runner.DeltaTime);
+                rb.linearVelocity = new Vector2(brakingX, rb.linearVelocity.y);
             }
         }
 
-        return input;
+        if (jumpPressed && isGroundedLocal)
+        {
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            isGroundedLocal = false;
+        }
     }
 
-    private bool GetJumpInput()
+
+    // --- SHARED LOGIC ---
+
+    private void UpdateAnimations(float speed, float yVel, bool grounded, float direction)
     {
-        // 1. New Input System
-        if (UnityEngine.InputSystem.Keyboard.current != null)
+        if (bodyAnimator != null)
         {
-            var kb = UnityEngine.InputSystem.Keyboard.current;
-            if (playerType == PlayerType.Fireboy && kb.upArrowKey.wasPressedThisFrame) return true;
-            if (playerType == PlayerType.Watergirl && kb.wKey.wasPressedThisFrame) return true;
+            bodyAnimator.SetFloat("Speed", speed);
+            bodyAnimator.SetFloat("yVelocity", yVel);
+            bodyAnimator.SetBool("IsGrounded", grounded);
+        }
+        
+        if (headAnimator != null)
+        {
+            headAnimator.SetFloat("Speed", speed);
+            headAnimator.SetFloat("yVelocity", yVel);
+            headAnimator.SetBool("IsGrounded", grounded);
+
+            float targetZRotation = 0f;
+            if (!grounded && speed > 0.1f)
+            {
+                targetZRotation = Mathf.Clamp(yVel * 2.5f, -35f, 35f);
+            }
+            
+            Quaternion targetRot = Quaternion.Euler(0, 0, targetZRotation);
+            headAnimator.transform.localRotation = Quaternion.Lerp(
+                headAnimator.transform.localRotation, 
+                targetRot, 
+                Time.deltaTime * 12f
+            );
         }
 
-        // 2. Legacy fallback
-        if (playerType == PlayerType.Fireboy && Input.GetKeyDown(KeyCode.UpArrow)) return true;
-        if (playerType == PlayerType.Watergirl && Input.GetKeyDown(KeyCode.W)) return true;
-        // 2. Fallback to legacy Input System
-        if (playerType == PlayerType.Fireboy)
-        {
-            if (Input.GetKeyDown(KeyCode.UpArrow)) return true;
-        }
-        else // Watergirl
-        {
-            if (Input.GetKeyDown(KeyCode.W)) return true;
-        }
-
-        return false;
+        if (direction > 0f)
+            transform.localScale = new Vector3(1f, 1f, 1f);
+        else if (direction < 0f)
+            transform.localScale = new Vector3(-1f, 1f, 1f);
     }
 
     public void FreezeForWin()
     {
-        // Stop physical movement
         rb.linearVelocity = Vector2.zero;
-        
-        // Reset animator parameters so they don't get stuck running in place
         if (bodyAnimator != null) bodyAnimator.SetFloat("Speed", 0f);
         if (headAnimator != null) headAnimator.SetFloat("Speed", 0f);
-        
-        // Disable script to stop input
         this.enabled = false;
-    }
-
-    private bool CheckGrounded()
-    {
-        if (groundCheck == null) return false;
-
-        // Use OverlapCircleAll to find everything overlapping the groundCheck.
-        // We loop through the results to find a valid ground collider,
-        // specifically ignoring our own colliders (the parent and any children).
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, groundCheckRadius, groundLayer);
-        
-        foreach (Collider2D col in colliders)
-        {
-            // If the collider is NOT this gameObject, and NOT a child (like Body_Visual/Head_Visual)
-            if (col.gameObject != gameObject && !col.transform.IsChildOf(transform))
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public void TriggerWinSequence()
     {
         rb.linearVelocity = Vector2.zero;
-        
-        // Play the full-body animation on the Body animator
         if (bodyAnimator != null) bodyAnimator.SetTrigger("EnterDoor");
-        
-        // Hide the head completely so it doesn't overlap the full-body animation
         if (headAnimator != null)
         {
             SpriteRenderer headSprite = headAnimator.GetComponent<SpriteRenderer>();
             if (headSprite != null) headSprite.enabled = false;
         }
-        
-        // Stop accepting input
         this.enabled = false;
     }
 
@@ -320,4 +352,6 @@ public class StandardPlayerMovement : MonoBehaviour
             Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
         }
     }
+
+    // End of class
 }
