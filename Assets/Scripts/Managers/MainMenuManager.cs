@@ -53,6 +53,14 @@ public class MainMenuManager : MonoBehaviour
 
     public void GoToLevel(string levelName)
     {
+        // By default, if they click a level from the level select, it's local co-op
+        Network.GameModeManager.CurrentMode = Network.GameModeManager.GameMode.LocalCoop;
         SceneManager.LoadScene(levelName);
+    }
+
+    public void PlayOnline()
+    {
+        Network.GameModeManager.CurrentMode = Network.GameModeManager.GameMode.OnlineMultiplayer;
+        SceneManager.LoadScene("LobbyScene");
     }
 }

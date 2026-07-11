@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using Fusion;
+using Network;
 
 public class UIManager : MonoBehaviour
 {
@@ -32,9 +34,9 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance != null && GameManager.Instance.isGameActive)
+        if (GameManager.Instance != null && GameManager.Instance.IsGameActive)
         {
-            UpdateTimerUI(GameManager.Instance.timeElapsed);
+            UpdateTimerUI(GameManager.Instance.TimeElapsed);
         }
     }
 
@@ -52,16 +54,26 @@ public class UIManager : MonoBehaviour
     private void ShowGameOverScreen()
     {
         if (gameOverPanel != null) gameOverPanel.SetActive(true);
-        Time.timeScale = 0f; // Pause game
+
+        // Only pause time in local co-op; online mode keeps network tick running
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop)
+        {
+            Time.timeScale = 0f;
+        }
     }
 
     private void ShowWinScreen()
     {
         if (winPanel != null) winPanel.SetActive(true);
-        Time.timeScale = 0f; // Pause game
+
+        // Only pause time in local co-op; online mode keeps network tick running
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop)
+        {
+            Time.timeScale = 0f;
+        }
 
         // Display current time (Time format only)
-        float time = GameManager.Instance.timeElapsed;
+        float time = GameManager.Instance.TimeElapsed;
         if (currentTimeText != null)
         {
             int m = Mathf.FloorToInt(time / 60F);
@@ -72,11 +84,11 @@ public class UIManager : MonoBehaviour
         // Display Gems
         if (redGemCountText != null)
         {
-            redGemCountText.text = "x " + GameManager.Instance.redGemsCollected;
+            redGemCountText.text = "x " + GameManager.Instance.RedGemsCollected;
         }
         if (blueGemCountText != null)
         {
-            blueGemCountText.text = "x " + GameManager.Instance.blueGemsCollected;
+            blueGemCountText.text = "x " + GameManager.Instance.BlueGemsCollected;
         }
 
         // Calculate, Display, and Save Rank
@@ -96,22 +108,65 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    // Button Functions
+    // Button Functions — now network-aware
     public void RetryLevel()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
+        {
+            // Use Fusion's networked scene loading so both players reload together
+            var controller = NetworkRunnerController.Instance;
+            if (controller != null && controller.Runner != null && controller.Runner.IsServer)
+            {
+                controller.Runner.LoadScene(SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex));
+            }
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 
     public void GoToHome()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Home"); // Assumes Home scene exists
+
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
+        {
+            // Shut down the network session, then go home
+            var controller = NetworkRunnerController.Instance;
+            if (controller != null) controller.Shutdown();
+            GameModeManager.CurrentMode = GameModeManager.GameMode.LocalCoop;
+        }
+
+        SceneManager.LoadScene("Home");
     }
 
     public void NextLevel(string nextLevelName)
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(nextLevelName);
+
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
+        {
+            var controller = NetworkRunnerController.Instance;
+            if (controller != null && controller.Runner != null && controller.Runner.IsServer)
+            {
+                int nextIndex = SceneUtility.GetBuildIndexByScenePath(nextLevelName);
+                if (nextIndex >= 0)
+                {
+                    controller.Runner.LoadScene(SceneRef.FromIndex(nextIndex));
+                }
+                else
+                {
+                    // Fallback: try loading by name through Fusion
+                    controller.Runner.LoadScene(SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex + 1));
+                }
+            }
+        }
+        else
+        {
+            SceneManager.LoadScene(nextLevelName);
+        }
     }
 }

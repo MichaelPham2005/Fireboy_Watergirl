@@ -1,6 +1,8 @@
 using UnityEngine;
 using TMPro; 
 using UnityEngine.SceneManagement;
+using Fusion;
+using Network;
 
 public class PauseMenuManager : MonoBehaviour
 {
@@ -8,6 +10,8 @@ public class PauseMenuManager : MonoBehaviour
     // We use a private variable here, and the script will find the object automatically
     [SerializeField] private GameObject pauseMenuPanel;
     public TextMeshProUGUI levelTitleText; 
+
+    private bool isPausedLocally = false;
 
     void Awake()
     {
@@ -51,7 +55,19 @@ public class PauseMenuManager : MonoBehaviour
         if (pauseMenuPanel != null)
         {
             pauseMenuPanel.SetActive(true); // Show the menu
-            Time.timeScale = 0f;            // Stop game time
+
+            if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop)
+            {
+                // Local co-op: freeze time as before
+                Time.timeScale = 0f;
+            }
+            else
+            {
+                // Online: suppress local input instead of freezing time
+                // (Network tick must keep running for the other player)
+                isPausedLocally = true;
+                SuppressLocalInput(true);
+            }
         }
     }
 
@@ -61,21 +77,75 @@ public class PauseMenuManager : MonoBehaviour
         if (pauseMenuPanel != null)
         {
             pauseMenuPanel.SetActive(false); // Hide the menu
-            Time.timeScale = 1f;             // Resume game time
+
+            if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop)
+            {
+                Time.timeScale = 1f;
+            }
+            else
+            {
+                isPausedLocally = false;
+                SuppressLocalInput(false);
+            }
         }
     }
 
     // Function to restart the current level
     public void RetryLevel()
     {
-        Time.timeScale = 1f; // Must resume time before loading the new scene
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
+        Time.timeScale = 1f;
+        isPausedLocally = false;
+        SuppressLocalInput(false);
+
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
+        {
+            var controller = NetworkRunnerController.Instance;
+            if (controller != null && controller.Runner != null && controller.Runner.IsServer)
+            {
+                controller.Runner.LoadScene(SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex));
+            }
+        }
+        else
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name); 
+        }
     }
 
     // Function to return to the Home menu
     public void GoToHome()
     {
-        Time.timeScale = 1f; 
-        SceneManager.LoadScene("Home"); // Ensure the "Home" scene is added to Build Settings
+        Time.timeScale = 1f;
+        isPausedLocally = false;
+        SuppressLocalInput(false);
+
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
+        {
+            var controller = NetworkRunnerController.Instance;
+            if (controller != null) controller.Shutdown();
+            GameModeManager.CurrentMode = GameModeManager.GameMode.LocalCoop;
+        }
+
+        SceneManager.LoadScene("Home");
+    }
+
+    /// <summary>
+    /// When paused in online mode, we suppress the local player's input
+    /// so they stop moving, but the network tick continues for the other player.
+    /// </summary>
+    private void SuppressLocalInput(bool suppress)
+    {
+        // Find the local player's movement script and disable/enable it
+        StandardPlayerMovement[] players = FindObjectsByType<StandardPlayerMovement>(FindObjectsSortMode.None);
+        foreach (var player in players)
+        {
+            if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
+            {
+                // Only suppress the LOCAL player's input
+                if (player.HasInputAuthority)
+                {
+                    player.enabled = !suppress;
+                }
+            }
+        }
     }
 }

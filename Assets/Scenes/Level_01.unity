@@ -176,6 +176,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6105923200338521848, guid: 8c697feebeccff44fbc974cea186133b, type: 3}
+      propertyPath: SortKey
+      value: 1972837146
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -194,6 +198,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 977097675}
     m_Modifications:
+    - target: {fileID: 4934395544795778757, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
+      propertyPath: SortKey
+      value: 3272092299
+      objectReference: {fileID: 0}
     - target: {fileID: 5707145188431620468, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
       propertyPath: m_Name
       value: Gem_Blue_7
@@ -300,6 +308,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6105923200338521848, guid: 8c697feebeccff44fbc974cea186133b, type: 3}
+      propertyPath: SortKey
+      value: 2262230120
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -315,7 +327,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5823044443515468083, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
   m_PrefabInstance: {fileID: 486556038455347428}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 486556038455347429}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de6efe0f75c3b468b8ad4f6dd4f683c2, type: 3}
@@ -751,6 +763,10 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 19dad00901a173a4180dc54ada49cc81, type: 2}
+    - target: {fileID: 7901498138867049799, guid: f2553ab4030329a44a1e3336dfd16212, type: 3}
+      propertyPath: SortKey
+      value: 4258203752
+      objectReference: {fileID: 0}
     - target: {fileID: 8046396118843752659, guid: f2553ab4030329a44a1e3336dfd16212, type: 3}
       propertyPath: m_Controller
       value: 
@@ -768,6 +784,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f2553ab4030329a44a1e3336dfd16212, type: 3}
+--- !u!114 &277689757 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7901498138867049799, guid: f2553ab4030329a44a1e3336dfd16212, type: 3}
+  m_PrefabInstance: {fileID: 277689756}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!1 &308345078
 GameObject:
   m_ObjectHideFlags: 0
@@ -10414,6 +10441,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -10539,6 +10567,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5173df70f62b3b34eaef785babffa677, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Network.NetworkCameraFollow
+  target: {fileID: 0}
+  smoothSpeed: 5
+  deadZone: 0.5
+  useBounds: 1
+  levelBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -10686,6 +10733,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6105923200338521848, guid: 8c697feebeccff44fbc974cea186133b, type: 3}
+      propertyPath: SortKey
+      value: 2220814909
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -10748,6 +10799,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 977097675}
     m_Modifications:
+    - target: {fileID: 4934395544795778757, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
+      propertyPath: SortKey
+      value: 3946511058
+      objectReference: {fileID: 0}
     - target: {fileID: 5707145188431620468, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
       propertyPath: m_Name
       value: Gem_Blue_10
@@ -11027,7 +11082,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 977097675}
-  - component: {fileID: 977097676}
   m_Layer: 0
   m_Name: Gems_Group_Blue
   m_TagString: Untagged
@@ -11060,20 +11114,6 @@ Transform:
   - {fileID: 734568349}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &977097676
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 977097674}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a26f5864ec9abd74ca8164d9f829001a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Gem
-  requiredPlayerTag: Watergirl
-  isRedGem: 0
 --- !u!1 &1048809078 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5491924996689083930, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
@@ -11142,6 +11182,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6105923200338521848, guid: 8c697feebeccff44fbc974cea186133b, type: 3}
+      propertyPath: SortKey
+      value: 1631754087
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11204,6 +11248,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6105923200338521848, guid: 8c697feebeccff44fbc974cea186133b, type: 3}
+      propertyPath: SortKey
+      value: 2020824857
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11222,6 +11270,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 977097675}
     m_Modifications:
+    - target: {fileID: 4934395544795778757, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
+      propertyPath: SortKey
+      value: 1671303557
+      objectReference: {fileID: 0}
     - target: {fileID: 5707145188431620468, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
       propertyPath: m_Name
       value: Gem_Blue_5
@@ -11407,6 +11459,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6105923200338521848, guid: 8c697feebeccff44fbc974cea186133b, type: 3}
+      propertyPath: SortKey
+      value: 3026619040
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11468,6 +11524,10 @@ PrefabInstance:
     - target: {fileID: 3048176100720657121, guid: 8c697feebeccff44fbc974cea186133b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6105923200338521848, guid: 8c697feebeccff44fbc974cea186133b, type: 3}
+      propertyPath: SortKey
+      value: 3372704025
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -11616,6 +11676,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 977097675}
     m_Modifications:
+    - target: {fileID: 4934395544795778757, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
+      propertyPath: SortKey
+      value: 3093860088
+      objectReference: {fileID: 0}
     - target: {fileID: 5707145188431620468, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
       propertyPath: m_Name
       value: Gem_Blue_4
@@ -11722,6 +11786,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6105923200338521848, guid: 8c697feebeccff44fbc974cea186133b, type: 3}
+      propertyPath: SortKey
+      value: 1186478731
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -11740,6 +11808,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 977097675}
     m_Modifications:
+    - target: {fileID: 4934395544795778757, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
+      propertyPath: SortKey
+      value: 605573994
+      objectReference: {fileID: 0}
     - target: {fileID: 5707145188431620468, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
       propertyPath: m_Name
       value: Gem_Blue_3
@@ -12020,6 +12092,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6105923200338521848, guid: 8c697feebeccff44fbc974cea186133b, type: 3}
+      propertyPath: SortKey
+      value: 855121346
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -12038,6 +12114,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 977097675}
     m_Modifications:
+    - target: {fileID: 4934395544795778757, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
+      propertyPath: SortKey
+      value: 3748775408
+      objectReference: {fileID: 0}
     - target: {fileID: 5707145188431620468, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
       propertyPath: m_Name
       value: Gem_Blue_6
@@ -12315,6 +12395,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 977097675}
     m_Modifications:
+    - target: {fileID: 4934395544795778757, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
+      propertyPath: SortKey
+      value: 218109876
+      objectReference: {fileID: 0}
     - target: {fileID: 5707145188431620468, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
       propertyPath: m_Name
       value: Gem_Blue_2
@@ -15926,6 +16010,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6105923200338521848, guid: 8c697feebeccff44fbc974cea186133b, type: 3}
+      propertyPath: SortKey
+      value: 1895520824
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -16046,6 +16134,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 977097675}
     m_Modifications:
+    - target: {fileID: 4934395544795778757, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
+      propertyPath: SortKey
+      value: 3578715639
+      objectReference: {fileID: 0}
     - target: {fileID: 5707145188431620468, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
       propertyPath: m_Name
       value: Gem_Blue_9
@@ -16105,7 +16197,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5481592736162478894, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
   m_PrefabInstance: {fileID: 486556038455347428}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 486556038455347429}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0071875e885fec943a833e6cdccd4d41, type: 3}
@@ -16210,6 +16302,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 977097675}
     m_Modifications:
+    - target: {fileID: 4934395544795778757, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
+      propertyPath: SortKey
+      value: 315636504
+      objectReference: {fileID: 0}
     - target: {fileID: 5707145188431620468, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
       propertyPath: m_Name
       value: Gem_Blue_8
@@ -16264,6 +16360,54 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5720023688953405060, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
   m_PrefabInstance: {fileID: 2021517784}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &2045875258
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2045875260}
+  - component: {fileID: 2045875259}
+  m_Layer: 0
+  m_Name: Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2045875259
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045875258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e91887cadeca32445a1a9f10a83597d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Network.PlayerSpawner
+  fireboyPrefab: {fileID: 7337004755311065766}
+  watergirlPrefab: {fileID: 277689757}
+  fireboySpawnPoint: {fileID: 0}
+  watergirlSpawnPoint: {fileID: 0}
+--- !u!4 &2045875260
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045875258}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.24757, y: 11.50973, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2062544128
 GameObject:
   m_ObjectHideFlags: 0
@@ -16566,8 +16710,46 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2648715472787188313, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 486556038455347431}
   m_SourcePrefab: {fileID: 100100000, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
+--- !u!1 &486556038455347429 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2648715472787188313, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
+  m_PrefabInstance: {fileID: 486556038455347428}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &486556038455347430 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5466106277131770268, guid: 8b1e186c3458245d9a6ef107ee4028ed, type: 3}
+  m_PrefabInstance: {fileID: 486556038455347428}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486556038455347429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e186aae7e892ee64b92726bb75769808, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+--- !u!114 &486556038455347431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 486556038455347429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 2607406351
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 486556038455347430}
+  ForceRemoteRenderTimeframe: 0
 --- !u!1001 &578374681423571094
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -16576,6 +16758,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1397737907}
     m_Modifications:
+    - target: {fileID: 3274635421116314559, guid: 81ccf175927d9ce44a777d24cbe3c4dd, type: 3}
+      propertyPath: SortKey
+      value: 2840299770
+      objectReference: {fileID: 0}
     - target: {fileID: 4248185665231280160, guid: 81ccf175927d9ce44a777d24cbe3c4dd, type: 3}
       propertyPath: m_Size.x
       value: 0.9577408
@@ -16988,6 +17174,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 977097675}
     m_Modifications:
+    - target: {fileID: 4934395544795778757, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
+      propertyPath: SortKey
+      value: 3506245982
+      objectReference: {fileID: 0}
     - target: {fileID: 5707145188431620468, guid: b067c62570686b64ea174fa7ebb6f06b, type: 3}
       propertyPath: m_Name
       value: Gem_Blue_1
@@ -17545,6 +17735,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1397737907}
     m_Modifications:
+    - target: {fileID: 4209408087395149873, guid: e158790e0aaa38542b361865049c6285, type: 3}
+      propertyPath: SortKey
+      value: 4222531755
+      objectReference: {fileID: 0}
     - target: {fileID: 7508770735114353575, guid: e158790e0aaa38542b361865049c6285, type: 3}
       propertyPath: m_Name
       value: Red_door
@@ -17823,11 +18017,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Fireboy_Player
       objectReference: {fileID: 0}
+    - target: {fileID: 7257976618152359548, guid: 8524920db13d9d540aa88115afdb6493, type: 3}
+      propertyPath: SortKey
+      value: 1066323002
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8524920db13d9d540aa88115afdb6493, type: 3}
+--- !u!114 &7337004755311065766 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7257976618152359548, guid: 8524920db13d9d540aa88115afdb6493, type: 3}
+  m_PrefabInstance: {fileID: 7337004755311065765}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
 --- !u!114 &7798762609500085478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18125,3 +18334,4 @@ SceneRoots:
   - {fileID: 2829094987906942966}
   - {fileID: 1249395297}
   - {fileID: 486556038455347428}
+  - {fileID: 2045875260}
