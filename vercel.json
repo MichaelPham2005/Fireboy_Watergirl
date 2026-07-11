@@ -1,0 +1,75 @@
+{
+  "version": 2,
+  "buildCommand": null,
+  "outputDirectory": "Build/WebGL",
+  "routes": [
+    {
+      "src": "/(.*)",
+      "headers": {
+        "Cross-Origin-Opener-Policy": "same-origin",
+        "Cross-Origin-Embedder-Policy": "require-corp"
+      },
+      "continue": true
+    },
+    {
+      "src": "/Build/(.*\\.gz)",
+      "headers": {
+        "Content-Encoding": "gzip"
+      },
+      "continue": true
+    },
+    {
+      "src": "/Build/(.*\\.br)",
+      "headers": {
+        "Content-Encoding": "br"
+      },
+      "continue": true
+    },
+    {
+      "src": "/Build/(.*\\.wasm\\.gz)",
+      "headers": {
+        "Content-Type": "application/wasm",
+        "Content-Encoding": "gzip"
+      },
+      "continue": true
+    },
+    {
+      "src": "/Build/(.*\\.wasm\\.br)",
+      "headers": {
+        "Content-Type": "application/wasm",
+        "Content-Encoding": "br"
+      },
+      "continue": true
+    },
+    {
+      "src": "/Build/(.*\\.js\\.gz)",
+      "headers": {
+        "Content-Type": "application/javascript",
+        "Content-Encoding": "gzip"
+      },
+      "continue": true
+    },
+    {
+      "src": "/Build/(.*\\.js\\.br)",
+      "headers": {
+        "Content-Type": "application/javascript",
+        "Content-Encoding": "br"
+      },
+      "continue": true
+    },
+    {
+      "src": "/Build/(.*\\.data\\.gz)",
+      "headers": {
+        "Content-Encoding": "gzip"
+      },
+      "continue": true
+    },
+    {
+      "src": "/Build/(.*\\.data\\.br)",
+      "headers": {
+        "Content-Encoding": "br"
+      },
+      "continue": true
+    }
+  ]
+}
