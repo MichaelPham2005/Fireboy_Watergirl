@@ -608,11 +608,11 @@ PrefabInstance:
       objectReference: {fileID: 8936150759569308032, guid: 91f15e24f56022149ba14d051c2e43c4, type: 3}
     - target: {fileID: 3726627733642656777, guid: f2553ab4030329a44a1e3336dfd16212, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.51
+      value: 7.76
       objectReference: {fileID: 0}
     - target: {fileID: 3726627733642656777, guid: f2553ab4030329a44a1e3336dfd16212, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -12.15
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 3726627733642656777, guid: f2553ab4030329a44a1e3336dfd16212, type: 3}
       propertyPath: m_LocalPosition.z
@@ -16913,14 +16913,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5312015424263697532, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_margin.z
-      value: -156.19154
-      objectReference: {fileID: 0}
-    - target: {fileID: 5491924996689083930, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 5591331901371663946, guid: eedef2858bfef44c693bf57a171c08f4, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -17717,11 +17709,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 664452760736575507, guid: 8524920db13d9d540aa88115afdb6493, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -16.54
+      value: 10.04
       objectReference: {fileID: 0}
     - target: {fileID: 664452760736575507, guid: 8524920db13d9d540aa88115afdb6493, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -8.08
+      value: 9.08
       objectReference: {fileID: 0}
     - target: {fileID: 664452760736575507, guid: 8524920db13d9d540aa88115afdb6493, type: 3}
       propertyPath: m_LocalPosition.z

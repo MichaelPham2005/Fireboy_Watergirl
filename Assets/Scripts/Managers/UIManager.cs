@@ -30,10 +30,66 @@ public class UIManager : MonoBehaviour
 
         if (menuHandlerGo != null)
         {
-            if (timerText == null) timerText = FindChildComponent<TextMeshProUGUI>(menuHandlerGo, "CurrentTimerText");
+            // Programmatically find or create the HUD timer text under TimerBackground
+            GameObject timerBgGo = FindChildGameObject(menuHandlerGo, "TimerBackground");
+            if (timerBgGo != null)
+            {
+                Transform hudTimerTrans = timerBgGo.transform.Find("HUDTimerText");
+                GameObject hudTimerGo = null;
+                if (hudTimerTrans != null)
+                {
+                    hudTimerGo = hudTimerTrans.gameObject;
+                }
+                else
+                {
+                    hudTimerGo = new GameObject("HUDTimerText");
+                    hudTimerGo.transform.SetParent(timerBgGo.transform, false);
+
+                    // Add RectTransform and configure it to stretch to parent size
+                    RectTransform rect = hudTimerGo.AddComponent<RectTransform>();
+                    rect.anchorMin = Vector2.zero;
+                    rect.anchorMax = Vector2.one;
+                    rect.sizeDelta = Vector2.zero;
+                    rect.anchoredPosition = Vector2.zero;
+
+                    // Add TextMeshProUGUI
+                    TextMeshProUGUI tmpText = hudTimerGo.AddComponent<TextMeshProUGUI>();
+                    tmpText.alignment = TextAlignmentOptions.Center;
+                    tmpText.fontSize = 20;
+
+                    // Copy font and color from a reference TextMeshProUGUI in the scene
+                    TextMeshProUGUI refText = menuHandlerGo.GetComponentInChildren<TextMeshProUGUI>(true);
+                    if (refText != null)
+                    {
+                        tmpText.font = refText.font;
+                        tmpText.fontSharedMaterial = refText.fontSharedMaterial;
+                        tmpText.color = refText.color;
+                    }
+                    else
+                    {
+                        tmpText.color = new Color(1f, 0.92f, 0.01f, 1f); // Yellow
+                    }
+                }
+
+                timerText = hudTimerGo.GetComponent<TextMeshProUGUI>();
+            }
+
             if (gameOverPanel == null) gameOverPanel = FindChildGameObject(menuHandlerGo, "GameOverPanel");
             if (winPanel == null) winPanel = FindChildGameObject(menuHandlerGo, "WinPanel");
-            if (currentTimeText == null) currentTimeText = FindChildComponent<TextMeshProUGUI>(menuHandlerGo, "CurrentTimer");
+
+            // Look for CurrentTimerText specifically inside winPanel (so it doesn't get confused with HUD timer)
+            if (currentTimeText == null)
+            {
+                if (winPanel != null)
+                {
+                    currentTimeText = FindChildComponent<TextMeshProUGUI>(winPanel, "CurrentTimerText");
+                }
+                else
+                {
+                    currentTimeText = FindChildComponent<TextMeshProUGUI>(menuHandlerGo, "CurrentTimerText");
+                }
+            }
+
             if (redGemCountText == null) redGemCountText = FindChildComponent<TextMeshProUGUI>(menuHandlerGo, "RedGemCountText");
             if (blueGemCountText == null) blueGemCountText = FindChildComponent<TextMeshProUGUI>(menuHandlerGo, "BlueGemCountText");
             if (rankText == null) rankText = FindChildComponent<TextMeshProUGUI>(menuHandlerGo, "RankText");
