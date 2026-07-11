@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4596314304746331607}
   - component: {fileID: 8813037352859934357}
   - component: {fileID: 2114076404585143826}
+  - component: {fileID: 4209408087395149873}
   m_Layer: 0
   m_Name: Red_door
   m_TagString: Untagged
@@ -175,3 +176,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   requiredPlayerTag: Fireboy
+  _NetworkIsOpen:
+    _value: 0
+--- !u!114 &4209408087395149873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7508770735114353575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 1138161285
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 2114076404585143826}
+  ForceRemoteRenderTimeframe: 0

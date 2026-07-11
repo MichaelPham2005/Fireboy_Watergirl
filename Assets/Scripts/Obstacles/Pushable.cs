@@ -1,7 +1,9 @@
 using UnityEngine;
+using Fusion;
+using Network;
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class PushableRock : MonoBehaviour
+public class PushableRock : NetworkBehaviour
 {
     [Header("Push Settings")]
     public float pushForce = 5f;
@@ -10,19 +12,14 @@ public class PushableRock : MonoBehaviour
 
     private Rigidbody2D rb;
 
-    void Start()
+    private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         
-        // Configure physics for a heavy object
         rb.mass = 5f;
         rb.gravityScale = 3f;
         rb.angularDamping = 2f; 
 
-        // Comment out the line below to allow natural tilting on slopes
-        // rb.constraints = RigidbodyConstraints2D.FreezeRotation; 
-
-        // Apply friction to interact with surfaces
         Collider2D col = GetComponent<Collider2D>();
         if (col != null && col.sharedMaterial == null)
         {
@@ -32,20 +29,38 @@ public class PushableRock : MonoBehaviour
 
     public void ApplyPush(float direction)
     {
-        // Apply force only if below speed limit
+        // Only host or local co-op processes explicit pushes
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer && !HasStateAuthority)
+            return;
+
         if (Mathf.Abs(rb.linearVelocity.x) < maxPushSpeed)
         {
             rb.AddForce(Vector2.right * direction * pushForce, ForceMode2D.Force);
         }
     }
 
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        // Apply damping to stop sliding
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop)
+        {
+            ProcessDamping(Time.fixedDeltaTime);
+        }
+    }
+
+    public override void FixedUpdateNetwork()
+    {
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer && HasStateAuthority)
+        {
+            ProcessDamping(Runner.DeltaTime);
+        }
+    }
+
+    private void ProcessDamping(float deltaTime)
+    {
         if (Mathf.Abs(rb.linearVelocity.x) > 0.1f)
         {
             rb.linearVelocity = new Vector2(
-                Mathf.MoveTowards(rb.linearVelocity.x, 0f, horizontalDamping * Time.fixedDeltaTime),
+                Mathf.MoveTowards(rb.linearVelocity.x, 0f, horizontalDamping * deltaTime),
                 rb.linearVelocity.y
             );
         }

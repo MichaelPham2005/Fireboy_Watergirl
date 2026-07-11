@@ -1,9 +1,12 @@
 using UnityEngine;
+using Fusion;
+using Network;
 
 /// <summary>
 /// Pulley system using LineRenderers instead of a heavy object pool.
+/// Now inherits from NetworkBehaviour to support online sync.
 /// </summary>
-public class PulleySystem : MonoBehaviour
+public class PulleySystem : NetworkBehaviour
 {
     [Header("Platforms")]
     public PulleyPlatform platformA;
@@ -22,7 +25,7 @@ public class PulleySystem : MonoBehaviour
     public float chainTextureWorldLength = 2.76f;
     
     public float chainWidth = 0.5f;
-    public float linkSpacing = 0.64f; // Keep for offset math if needed
+    public float linkSpacing = 0.64f;
     public float textureScrollMultiplier = 1f;
 
     [Header("Movement Settings")]
@@ -38,6 +41,8 @@ public class PulleySystem : MonoBehaviour
     private float currentVelocity = 0f;
     private float maxOffsetPos, maxOffsetNeg;
 
+    [Networked] public float NetworkOffset { get; set; }
+
     // Line Renderers
     private LineRenderer lineLeft;
     private LineRenderer lineRight;
@@ -48,22 +53,18 @@ public class PulleySystem : MonoBehaviour
         rbA = platformA.GetComponent<Rigidbody2D>();
         rbB = platformB.GetComponent<Rigidbody2D>();
         
-        // Turn on Interpolation so the movement renders perfectly smooth at any framerate
         rbA.interpolation = RigidbodyInterpolation2D.Interpolate;
         rbB.interpolation = RigidbodyInterpolation2D.Interpolate;
         
         startYA = rbA.position.y;
         startYB = rbB.position.y;
 
-        // Calculate how far down each platform can go before hitting the floor
         float maxDropA = GetFloorDistance(platformA);
         float maxDropB = GetFloorDistance(platformB);
 
-        // Max positive offset (A goes down, B goes up)
         float maxRiseB = pulleyPointB.position.y - startYB - pulleyBuffer;
         maxOffsetPos = Mathf.Min(maxRiseB, maxDropA);
 
-        // Max negative offset (A goes up, B goes down)
         float maxRiseA = pulleyPointA.position.y - startYA - pulleyBuffer;
         maxOffsetNeg = -Mathf.Min(maxRiseA, maxDropB);
 
@@ -85,23 +86,20 @@ public class PulleySystem : MonoBehaviour
         if (col == null) return 10f;
         
         ContactFilter2D filter = new ContactFilter2D();
-        filter.useTriggers = false; // Ignore triggers
+        filter.useTriggers = false;
         RaycastHit2D[] results = new RaycastHit2D[10];
         
-        // Cast the platform's collider straight down
         int count = col.Cast(Vector2.down, filter, results, 100f);
         for (int i = 0; i < count; i++)
         {
-            // Ignore ourselves and players
             if (results[i].collider.gameObject != platform.gameObject && 
                 !results[i].collider.CompareTag("Fireboy") && 
                 !results[i].collider.CompareTag("Watergirl"))
             {
-                // Return the distance to the floor
                 return results[i].distance;
             }
         }
-        return 10f; // Default if nothing is below
+        return 10f; 
     }
 
     private LineRenderer CreateLineRenderer(string name, Material mat)
@@ -117,21 +115,47 @@ public class PulleySystem : MonoBehaviour
         lr.widthMultiplier = chainWidth;
         lr.positionCount = 2;
         lr.textureMode = LineTextureMode.Stretch;
-        lr.sortingOrder = -5; // Put chains behind platforms
+        lr.sortingOrder = -5;
         return lr;
     }
 
     private void FixedUpdate()
     {
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop)
+        {
+            ProcessMovement(Time.fixedDeltaTime);
+        }
+    }
+
+    public override void FixedUpdateNetwork()
+    {
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
+        {
+            if (HasStateAuthority)
+            {
+                ProcessMovement(Runner.DeltaTime);
+                NetworkOffset = currentOffset;
+            }
+            else
+            {
+                // Client synchronizes to host offset
+                currentOffset = Mathf.Lerp(currentOffset, NetworkOffset, Runner.DeltaTime * 15f);
+                rbA.MovePosition(new Vector2(rbA.position.x, startYA - currentOffset));
+                rbB.MovePosition(new Vector2(rbB.position.x, startYB + currentOffset));
+            }
+        }
+    }
+
+    private void ProcessMovement(float deltaTime)
+    {
         int weightDiff = platformA.playersOnPlatform - platformB.playersOnPlatform;
         float targetVelocity = weightDiff * moveSpeed;
         
-        // Smoothly accelerate/decelerate towards the target velocity
-        currentVelocity = Mathf.Lerp(currentVelocity, targetVelocity, acceleration * Time.fixedDeltaTime);
+        currentVelocity = Mathf.Lerp(currentVelocity, targetVelocity, acceleration * deltaTime);
 
         if (Mathf.Abs(currentVelocity) > 0.001f)
         {
-            currentOffset += currentVelocity * Time.fixedDeltaTime;
+            currentOffset += currentVelocity * deltaTime;
             currentOffset = Mathf.Clamp(currentOffset, maxOffsetNeg, maxOffsetPos);
         }
 
@@ -141,14 +165,13 @@ public class PulleySystem : MonoBehaviour
 
     private void Update()
     {
-        // Update vertical lines
+        // Use currentOffset for visuals (which clients manually sync from NetworkOffset)
         Vector3 posA = platformA.transform.position;
         lineLeft.SetPosition(0, pulleyPointA.position);
         lineLeft.SetPosition(1, posA);
         float distLeft = Vector3.Distance(pulleyPointA.position, posA);
         float scaleLeft = distLeft / chainTextureWorldLength;
         lineLeft.material.mainTextureScale = new Vector2(scaleLeft, 1f);
-        // Offset by -scale to anchor the texture at the bottom (platform) instead of the top (pulley)
         lineLeft.material.mainTextureOffset = new Vector2(-scaleLeft, 0f);
 
         Vector3 posB = platformB.transform.position;
@@ -159,8 +182,6 @@ public class PulleySystem : MonoBehaviour
         lineRight.material.mainTextureScale = new Vector2(scaleRight, 1f);
         lineRight.material.mainTextureOffset = new Vector2(-scaleRight, 0f);
 
-        // Update horizontal line scroll offset
-        // We use textureScrollMultiplier to control how fast it scrolls.
         float offset = (currentOffset / chainTextureWorldLength) * textureScrollMultiplier;
         lineTop.material.mainTextureOffset = new Vector2(offset, 0);
     }

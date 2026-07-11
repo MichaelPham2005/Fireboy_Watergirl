@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8514212806199219822}
   - component: {fileID: 2304564050856800415}
   - component: {fileID: 1098807919644113296}
+  - component: {fileID: 6105923200338521848}
   m_Layer: 0
   m_Name: Gem_Red
   m_TagString: RedGem
@@ -143,3 +144,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Gem
   requiredPlayerTag: Fireboy
   isRedGem: 1
+--- !u!114 &6105923200338521848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 278863974354759892}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 3564869548
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: 1098807919644113296}
+  ForceRemoteRenderTimeframe: 0
