@@ -26,6 +26,7 @@ public class StandardPlayerMovement : MonoBehaviour
     // Internal: track the surface normal of what we're standing on
     private Vector2 groundNormal = Vector2.up;
     private ContactPoint2D[] contacts = new ContactPoint2D[8];
+    private float jumpTimer = 0f;
 
     // Footstep timing
     private float footstepTimer = 0f;
@@ -160,6 +161,8 @@ public class StandardPlayerMovement : MonoBehaviour
 
     void Update()
     {
+        if (jumpTimer > 0f) jumpTimer -= Time.deltaTime;
+
         UpdateGroundState();
 
         float moveInput = GetHorizontalInput();
@@ -221,6 +224,7 @@ public class StandardPlayerMovement : MonoBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             isGrounded = false;
+            jumpTimer = 0.15f;
             AudioManager.Instance?.PlayJump(playerType == PlayerType.Fireboy);
         }
 
@@ -255,7 +259,14 @@ public class StandardPlayerMovement : MonoBehaviour
             }
             else
             {
-                rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+                // We are on flat ground or airborne.
+                float targetY = rb.linearVelocity.y;
+                if (isGrounded)
+                {
+                    // If grounded on flat ground, kill upward velocity to prevent flying off slopes.
+                    targetY = Mathf.Min(targetY, 0f);
+                }
+                rb.linearVelocity = new Vector2(moveInput * moveSpeed, targetY);
             }
         }
         else if (isGrounded)
@@ -273,10 +284,10 @@ public class StandardPlayerMovement : MonoBehaviour
 
     private void UpdateGroundState()
     {
-        // 1. VELOCITY-BASED DOUBLE JUMP PREVENTION
-        // If upward velocity exceeds normal slope walking speeds (e.g. > 5.6), 
-        // the player MUST have jumped. Force isGrounded = false.
-        if (rb.linearVelocity.y > moveSpeed * 0.8f)
+        // 1. JUMP TIMER CHECK
+        // Safely prevents double-jumping and gives the player time to leave the ground
+        // without erroneously un-grounding them during slope-collision physics bounces.
+        if (jumpTimer > 0f)
         {
             isGrounded = false;
             groundNormal = Vector2.up;
@@ -320,7 +331,7 @@ public class StandardPlayerMovement : MonoBehaviour
         isGrounded = foundGround;
     }
 
-    private float GetHorizontalInput()
+    public float GetHorizontalInput()
     {
         float input = 0f;
 

@@ -18,23 +18,35 @@ public class PlayerHealth : MonoBehaviour
     void OnTriggerEnter2D(Collider2D col)
     {
         PoolElement pool = col.GetComponent<PoolElement>();
-        if (pool != null) CheckDeath(pool);
+        if (pool != null) CheckDeath(pool, col);
     }
 
     void OnCollisionEnter2D(Collision2D col)
     {
         PoolElement pool = col.gameObject.GetComponent<PoolElement>();
-        if (pool != null) CheckDeath(pool);
+        if (pool != null) CheckDeath(pool, col.collider);
     }
 
     void OnCollisionStay2D(Collision2D col)
     {
         PoolElement pool = col.gameObject.GetComponent<PoolElement>();
-        if (pool != null) CheckDeath(pool);
+        if (pool != null) CheckDeath(pool, col.collider);
     }
 
-    private void CheckDeath(PoolElement pool)
+    private void CheckDeath(PoolElement pool, Collider2D hazardCollider)
     {
+        // 1. Check if the hazard is hitting our head instead of our feet
+        if (hazardCollider != null)
+        {
+            Vector2 closestPoint = hazardCollider.ClosestPoint(transform.position);
+            // If the closest point of the hazard is above the player's center,
+            // they bumped their head from below. Ignore the hazard.
+            if (closestPoint.y > transform.position.y + 0.1f)
+            {
+                return;
+            }
+        }
+
         bool shouldDie = false;
 
         // Fireboy dies in Water and Goo

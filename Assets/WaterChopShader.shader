@@ -29,6 +29,7 @@ Shader "Custom/WaterChopURP"
 
         Pass
         {
+            Tags { "LightMode" = "Universal2D" }
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag

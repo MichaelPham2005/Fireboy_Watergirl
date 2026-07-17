@@ -8,6 +8,7 @@ TagManager:
   - Fireboy
   - Watergirl
   - GreenGoo
+  - LavaRed
   layers:
   - Default
   - TransparentFX
@@ -54,11 +55,11 @@ TagManager:
   - name: Decoration
     uniqueID: 3371280839
     locked: 0
-  - name: Lava
-    uniqueID: 2464364901
-    locked: 0
   - name: GameObject
     uniqueID: 3281156571
+    locked: 0
+  - name: Lava
+    uniqueID: 2464364901
     locked: 0
   m_RenderingLayers:
   - Default
