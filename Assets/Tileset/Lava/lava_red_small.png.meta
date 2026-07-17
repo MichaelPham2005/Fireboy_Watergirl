@@ -116,8 +116,8 @@ TextureImporter:
       - - {x: -48, y: -16}
         - {x: 47, y: -14}
         - {x: 48, y: 16}
-        - {x: 28, y: -1}
-        - {x: -28, y: -1}
+        - {x: 28, y: -11}
+        - {x: -27, y: -11}
         - {x: -48, y: 16}
       tessellationDetail: 0
       bones: []
