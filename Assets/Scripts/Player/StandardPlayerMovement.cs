@@ -266,7 +266,7 @@ public class StandardPlayerMovement : NetworkBehaviour
             {
                 // We are on flat ground or airborne.
                 float targetY = rb.linearVelocity.y;
-                if (isGrounded)
+                if (isGroundedLocal)
                 {
                     // If grounded on flat ground, kill upward velocity to prevent flying off slopes.
                     targetY = Mathf.Min(targetY, 0f);

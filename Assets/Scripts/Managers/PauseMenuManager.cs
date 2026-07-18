@@ -13,8 +13,6 @@ public class PauseMenuManager : MonoBehaviour
     public TextMeshProUGUI levelTitleText; 
     private GameObject timerBackground;
 
-    private bool isPausedLocally = false;
-
     void Awake()
     {
         // Find the object even if it's disabled in the hierarchy
@@ -146,7 +144,6 @@ public class PauseMenuManager : MonoBehaviour
             {
                 // Online: suppress local input instead of freezing time
                 // (Network tick must keep running for the other player)
-                isPausedLocally = true;
                 SuppressLocalInput(true);
             }
         }
@@ -169,7 +166,6 @@ public class PauseMenuManager : MonoBehaviour
             }
             else
             {
-                isPausedLocally = false;
                 SuppressLocalInput(false);
             }
         }
@@ -183,7 +179,6 @@ public class PauseMenuManager : MonoBehaviour
     public void RetryLevel()
     {
         Time.timeScale = 1f;
-        isPausedLocally = false;
         SuppressLocalInput(false);
 
         if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
@@ -204,7 +199,6 @@ public class PauseMenuManager : MonoBehaviour
     public void GoToHome()
     {
         Time.timeScale = 1f;
-        isPausedLocally = false;
         SuppressLocalInput(false);
 
         if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
