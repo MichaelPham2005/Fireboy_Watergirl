@@ -105,3 +105,6 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Ignore Photon App ID settings to prevent overwriting team App ID
+/[Aa]ssets/Photon/Fusion/Resources/PhotonAppSettings.asset*
