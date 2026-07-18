@@ -29,6 +29,7 @@ public class StandardPlayerMovement : NetworkBehaviour
     private bool isGroundedLocal;
     private Vector2 groundNormal = Vector2.up;
     private ContactPoint2D[] contacts = new ContactPoint2D[8];
+    private float jumpTimer = 0f;
 
     // --- Networked State ---
     [Networked] public NetworkBool IsGrounded { get; set; }
@@ -167,6 +168,8 @@ public class StandardPlayerMovement : NetworkBehaviour
     // --- LOCAL CO-OP LOGIC ---
     private void Update()
     {
+        if (jumpTimer > 0f) jumpTimer -= Time.deltaTime;
+
         if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop)
         {
             UpdateGroundStateLocal();
@@ -261,7 +264,14 @@ public class StandardPlayerMovement : NetworkBehaviour
             }
             else
             {
-                rb.linearVelocity = new Vector2(moveInput * moveSpeed, rb.linearVelocity.y);
+                // We are on flat ground or airborne.
+                float targetY = rb.linearVelocity.y;
+                if (isGrounded)
+                {
+                    // If grounded on flat ground, kill upward velocity to prevent flying off slopes.
+                    targetY = Mathf.Min(targetY, 0f);
+                }
+                rb.linearVelocity = new Vector2(moveInput * moveSpeed, targetY);
             }
         }
         else if (isGroundedLocal)
@@ -277,12 +287,16 @@ public class StandardPlayerMovement : NetworkBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             isGroundedLocal = false;
+            jumpTimer = 0.15f;
         }
     }
 
     private void UpdateGroundStateLocal()
     {
-        if (rb.linearVelocity.y > moveSpeed * 0.8f)
+        // 1. JUMP TIMER CHECK
+        // Safely prevents double-jumping and gives the player time to leave the ground
+        // without erroneously un-grounding them during slope-collision physics bounces.
+        if (jumpTimer > 0f)
         {
             isGroundedLocal = false;
             groundNormal = Vector2.up;
@@ -320,6 +334,16 @@ public class StandardPlayerMovement : NetworkBehaviour
         isGroundedLocal = foundGround;
     }
 
+    public float GetHorizontalInput()
+    {
+        // If we are in multiplayer and remote, we might not have local input.
+        // For now, return the networked CurrentSpeed & FacingDirection if it's not local co-op.
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
+        {
+            return CurrentSpeed * FacingDirection;
+        }
+        return GetHorizontalInputLocal();
+    }
 
     // --- ONLINE MULTIPLAYER LOGIC (FUSION) ---
 
@@ -334,6 +358,8 @@ public class StandardPlayerMovement : NetworkBehaviour
 
         // Only the Host (State Authority) runs the actual physics simulation.
         if (!HasStateAuthority) return;
+
+        if (jumpTimer > 0f) jumpTimer -= Runner.DeltaTime;
         
         // --- AUTO-ASSIGN INPUT AUTHORITY FOR SCENE OBJECTS ---
         if (Object.InputAuthority == PlayerRef.None)
@@ -443,6 +469,7 @@ public class StandardPlayerMovement : NetworkBehaviour
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
             isGroundedLocal = false;
+            jumpTimer = 0.15f;
             AudioManager.Instance?.PlayJump(playerType == PlayerType.Fireboy);
         }
     }

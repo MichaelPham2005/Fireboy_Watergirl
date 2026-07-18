@@ -114,8 +114,8 @@ TextureImporter:
       outline: []
       physicsShape:
       - - {x: 96, y: 16}
-        - {x: 75, y: -1}
-        - {x: -76, y: -1}
+        - {x: 76, y: -11}
+        - {x: -76, y: -11}
         - {x: -96, y: 16}
         - {x: -96, y: -16}
         - {x: 96, y: -16}

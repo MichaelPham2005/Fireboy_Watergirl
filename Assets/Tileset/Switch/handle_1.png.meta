@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 7d293692eaa5b94478ad8cd177d52f11
+guid: 5fa1fc6331bb2b24badd9b5f16c4f1e3
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 7417498029127908629
-    second: 002_0
+      213: 6648492832454587971
+    second: handle_1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -37,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 0
+    filterMode: 1
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -51,7 +51,7 @@ TextureImporter:
   spriteMeshType: 1
   alignment: 0
   spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 48
+  spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -100,29 +100,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: 002_0
+      name: handle_1_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 144
-        height: 48
+        x: 2
+        y: 11
+        width: 28
+        height: 10
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
-      physicsShape:
-      - - {x: 72, y: 24}
-        - {x: 42, y: -16}
-        - {x: -42, y: -16}
-        - {x: -72, y: 24}
-        - {x: -72, y: -24}
-        - {x: 72, y: -24}
-      tessellationDetail: 0
+      physicsShape: []
+      tessellationDetail: -1
       bones: []
-      spriteID: 51d345c682f30f660800000000000000
-      internalID: 7417498029127908629
+      spriteID: 346bf228101344c50800000000000000
+      internalID: 6648492832454587971
       vertices: []
       indices: 
       edges: []
@@ -131,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: df5762112705642aab0d083588bc6acc
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -141,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      002_0: 7417498029127908629
+      handle_1_0: 6648492832454587971
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
