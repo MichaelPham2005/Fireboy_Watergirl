@@ -36,6 +36,8 @@ public class StandardPlayerMovement : NetworkBehaviour
     [Networked] public float CurrentSpeed { get; set; }
     [Networked] public float CurrentYVelocity { get; set; }
     [Networked] public float FacingDirection { get; set; }
+    [Networked] public int NetworkedAccessoryId { get; set; }
+    private ChangeDetector _changes;
 
     // Footstep timing
     private float footstepTimer = 0f;
@@ -68,16 +70,25 @@ public class StandardPlayerMovement : NetworkBehaviour
 
         transform.localScale = new Vector3(1f, 1f, 1f);
 
-        LoadEquippedAccessory();
+        if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop) 
+        {
+            int localId = (playerType == PlayerType.Fireboy) ? PlayerPrefs.GetInt("FB_Tie", -1) : PlayerPrefs.GetInt("WG_Tie", -1);
+            ApplyAccessory(localId);
+        }
     }
 
-    private void LoadEquippedAccessory()
+    private void ApplyAccessory(int accessoryId)
     {
+        Transform oldTie = bodyAnimator != null ? bodyAnimator.transform.Find("Equipped_Tie") : transform.Find("Equipped_Tie");
+        if (oldTie != null) Destroy(oldTie.gameObject);
+        
+        Transform oldScarf = bodyAnimator != null ? bodyAnimator.transform.Find("Equipped_Scarf") : transform.Find("Equipped_Scarf");
+        if (oldScarf != null) Destroy(oldScarf.gameObject);
+
+        if (accessoryId < 0) return;
+
         if (playerType == PlayerType.Fireboy)
         {
-            int equippedTie = PlayerPrefs.GetInt("FB_Tie", -1);
-            if (equippedTie < 0) return;
-
             Sprite tieSprite = Resources.Load<Sprite>("tie");
             if (tieSprite == null)
             {
@@ -106,7 +117,7 @@ public class StandardPlayerMovement : NetworkBehaviour
             }
 
             Color tieColor = Color.white;
-            switch (equippedTie)
+            switch (accessoryId)
             {
                 case 0: tieColor = Color.white; break;
                 case 1: tieColor = new Color(0f, 0f, 0.867f, 1f); break; // Blue
@@ -120,9 +131,6 @@ public class StandardPlayerMovement : NetworkBehaviour
         }
         else if (playerType == PlayerType.Watergirl)
         {
-            int equippedBowtie = PlayerPrefs.GetInt("WG_Tie", -1);
-            if (equippedBowtie < 0) return;
-
             Sprite bowtieSprite = Resources.Load<Sprite>("scarf");
             if (bowtieSprite == null)
             {
@@ -151,7 +159,7 @@ public class StandardPlayerMovement : NetworkBehaviour
             }
 
             Color bowtieColor = Color.white;
-            switch (equippedBowtie)
+            switch (accessoryId)
             {
                 case 0: bowtieColor = Color.white; break;
                 case 1: bowtieColor = new Color(0f, 0f, 0.867f, 1f); break; // Blue
@@ -349,7 +357,27 @@ public class StandardPlayerMovement : NetworkBehaviour
 
     public override void Spawned()
     {
-        // NetworkRigidbody2D handles proxy kinematics automatically now.
+        _changes = GetChangeDetector(ChangeDetector.Source.SimulationState);
+
+        if (HasInputAuthority || (HasStateAuthority && Object.InputAuthority == PlayerRef.None)) 
+        {
+            int localChoice = (playerType == PlayerType.Fireboy) ? PlayerPrefs.GetInt("FB_Tie", -1) : PlayerPrefs.GetInt("WG_Tie", -1);
+            if (HasStateAuthority) 
+            {
+                NetworkedAccessoryId = localChoice;
+                ApplyAccessory(localChoice);
+            } 
+            else 
+            {
+                RPC_SetAccessory(localChoice);
+            }
+        }
+    }
+
+    [Rpc(RpcSources.InputAuthority, RpcTargets.StateAuthority)]
+    public void RPC_SetAccessory(int accessoryId)
+    {
+        NetworkedAccessoryId = accessoryId;
     }
 
     public override void FixedUpdateNetwork()
@@ -409,6 +437,16 @@ public class StandardPlayerMovement : NetworkBehaviour
     {
         if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
         {
+            foreach (var change in _changes.DetectChanges(this))
+            {
+                switch (change)
+                {
+                    case nameof(NetworkedAccessoryId):
+                        ApplyAccessory(NetworkedAccessoryId);
+                        break;
+                }
+            }
+
             UpdateAnimations(CurrentSpeed, CurrentYVelocity, IsGrounded, FacingDirection);
 
             // Network Footsteps
