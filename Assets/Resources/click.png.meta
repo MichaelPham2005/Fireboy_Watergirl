@@ -5,21 +5,6 @@ TextureImporter:
   - first:
       213: 4820742124852407542
     second: click_0
-  - first:
-      213: 1744552757854904484
-    second: click_1
-  - first:
-      213: -4843033385072174999
-    second: click_2
-  - first:
-      213: 529646714159594265
-    second: click_3
-  - first:
-      213: -2643197510272295913
-    second: click_4
-  - first:
-      213: -4646588943226991556
-    second: click_5
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -118,10 +103,10 @@ TextureImporter:
       name: click_0
       rect:
         serializedVersion: 2
-        x: 124
-        y: 321
-        width: 69
-        height: 69
+        x: 123
+        y: 28
+        width: 308
+        height: 397
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -132,116 +117,6 @@ TextureImporter:
       bones: []
       spriteID: 6fce691db67b6e240800000000000000
       internalID: 4820742124852407542
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: click_1
-      rect:
-        serializedVersion: 2
-        x: 220
-        y: 347
-        width: 22
-        height: 78
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 4a0aedf7d75e53810800000000000000
-      internalID: 1744552757854904484
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: click_2
-      rect:
-        serializedVersion: 2
-        x: 265
-        y: 317
-        width: 70
-        height: 70
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9685a67bbc61accb0800000000000000
-      internalID: -4843033385072174999
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: click_3
-      rect:
-        serializedVersion: 2
-        x: 90
-        y: 272
-        width: 78
-        height: 23
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 91b7fed51eea95700800000000000000
-      internalID: 529646714159594265
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: click_4
-      rect:
-        serializedVersion: 2
-        x: 203
-        y: 3
-        width: 290
-        height: 292
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 71cd5016ed9715bd0800000000000000
-      internalID: -2643197510272295913
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: click_5
-      rect:
-        serializedVersion: 2
-        x: 118
-        y: 171
-        width: 70
-        height: 70
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: c3c82bd89fff38fb0800000000000000
-      internalID: -4646588943226991556
       vertices: []
       indices: 
       edges: []
@@ -261,11 +136,6 @@ TextureImporter:
       entries: []
     nameFileIdTable:
       click_0: 4820742124852407542
-      click_1: 1744552757854904484
-      click_2: -4843033385072174999
-      click_3: 529646714159594265
-      click_4: -2643197510272295913
-      click_5: -4646588943226991556
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
