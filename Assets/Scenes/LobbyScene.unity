@@ -1130,6 +1130,7 @@ GameObject:
   - component: {fileID: 1274828683}
   - component: {fileID: 1274828682}
   - component: {fileID: 1274828681}
+  - component: {fileID: 1274828684}
   m_Layer: 5
   m_Name: HostButton
   m_TagString: Untagged
@@ -1251,6 +1252,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1274828679}
   m_CullTransparentMesh: 1
+--- !u!114 &1274828684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1274828679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8f57386c1d64a46a415e8ebd9eba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonHover
+  hoverScale: 1.1
+  cursorHandTexture: {fileID: 2800000, guid: a6d2f0b6a1b7c4cc4ac67b7f05e747ff, type: 3}
 --- !u!1 &1473743283
 GameObject:
   m_ObjectHideFlags: 0
@@ -1400,6 +1415,7 @@ GameObject:
   - component: {fileID: 1575652397}
   - component: {fileID: 1575652396}
   - component: {fileID: 1575652395}
+  - component: {fileID: 1575652398}
   m_Layer: 5
   m_Name: JoinButton
   m_TagString: Untagged
@@ -1521,6 +1537,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1575652393}
   m_CullTransparentMesh: 1
+--- !u!114 &1575652398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1575652393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8f57386c1d64a46a415e8ebd9eba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonHover
+  hoverScale: 1.1
+  cursorHandTexture: {fileID: 2800000, guid: a6d2f0b6a1b7c4cc4ac67b7f05e747ff, type: 3}
 --- !u!1 &1727506236
 GameObject:
   m_ObjectHideFlags: 0
@@ -1623,6 +1653,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1834510289}
   - component: {fileID: 1834510288}
+  - component: {fileID: 1834510290}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -1661,6 +1692,25 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1834510290
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1834510287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e92a05df7a3a04eceb26e6d1bac4a71d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuNavigator
+  menuButtons:
+  - {fileID: 1274828681}
+  - {fileID: 1575652395}
+  upKey: 273
+  downKey: 274
+  confirmKey: 13
+  confirmKeyAlt: 271
 --- !u!1 &1835599231
 GameObject:
   m_ObjectHideFlags: 0
