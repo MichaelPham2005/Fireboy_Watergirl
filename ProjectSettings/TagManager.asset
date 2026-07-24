@@ -61,5 +61,8 @@ TagManager:
   - name: Lava
     uniqueID: 2464364901
     locked: 0
+  - name: Guardian
+    uniqueID: 1533760435
+    locked: 0
   m_RenderingLayers:
   - Default

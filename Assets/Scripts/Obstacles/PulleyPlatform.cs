@@ -1,47 +1,53 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-/// <summary>
-/// Attach this to each Floor platform in the pulley system.
-/// It detects when players stand on top and reports the count
-/// to the main PulleySystem controller.
-/// </summary>
 public class PulleyPlatform : MonoBehaviour
 {
-    [HideInInspector] public int playersOnPlatform = 0;
+    [HideInInspector] public float totalMassOnPlatform = 0f;
+    private Collider2D col;
 
-    // Track which player GameObjects are currently on this platform
-    // to prevent double-counting from multiple collision contacts.
-    private HashSet<GameObject> trackedPlayers = new HashSet<GameObject>();
-
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void Awake()
     {
-        GameObject other = collision.gameObject;
-
-        // Check if the object is a player or a pushable rock
-        bool isPlayer = other.CompareTag("Fireboy") || other.CompareTag("Watergirl");
-        bool isPushable = other.GetComponent<PushableRock>() != null || other.name.Contains("Rock");
-
-        // Only react to valid heavy objects, and only if we haven't already counted them
-        if ((isPlayer || isPushable) && !trackedPlayers.Contains(other))
-        {
-            // Make sure the object is ABOVE the platform (standing on top, not bumping the side)
-            if (other.transform.position.y > transform.position.y)
-            {
-                trackedPlayers.Add(other);
-                playersOnPlatform = trackedPlayers.Count;
-            }
-        }
+        col = GetComponent<Collider2D>();
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void FixedUpdate()
     {
-        GameObject other = collision.gameObject;
+        if (col == null) return;
 
-        if (trackedPlayers.Contains(other))
+        // Dùng OverlapBox thay vì OnCollision để tránh lỗi Feedback Loop
+        // (Khi ròng rọc đi xuống, nhân vật bị hở ra 1 li làm mất va chạm -> ròng rọc dừng -> nhân vật rớt xuống đụng lại -> ròng rọc chạy tiếp -> Jitter)
+        Vector2 size = col.bounds.size;
+        size.x *= 0.95f; 
+        size.y += 0.5f; // Mở rộng vùng check lên trên 0.5 units để bắt các vật thể đang bị "hở" nhẹ do ròng rọc đi xuống
+        
+        Vector2 center = col.bounds.center;
+        center.y += 0.25f;
+
+        Collider2D[] hits = Physics2D.OverlapBoxAll(center, size, 0f);
+
+        float currentMass = 0f;
+        HashSet<Rigidbody2D> processedRbs = new HashSet<Rigidbody2D>();
+
+        foreach (Collider2D hit in hits)
         {
-            trackedPlayers.Remove(other);
-            playersOnPlatform = trackedPlayers.Count;
+            if (hit.gameObject == gameObject) continue;
+
+            Rigidbody2D rb = hit.attachedRigidbody;
+            if (rb != null && rb.bodyType == RigidbodyType2D.Dynamic)
+            {
+                if (!processedRbs.Contains(rb))
+                {
+                    // Chỉ tính những vật có tâm nằm cao hơn mép dưới của platform
+                    if (hit.bounds.center.y > col.bounds.min.y)
+                    {
+                        currentMass += rb.mass;
+                        processedRbs.Add(rb);
+                    }
+                }
+            }
         }
+
+        totalMassOnPlatform = currentMass;
     }
 }

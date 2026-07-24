@@ -43,6 +43,7 @@ public class StandardPlayerMovement : NetworkBehaviour
 
     private void Awake()
     {
+        Input.imeCompositionMode = IMECompositionMode.Off;
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
 

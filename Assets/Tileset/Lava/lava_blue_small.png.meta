@@ -113,10 +113,12 @@ TextureImporter:
       customData: 
       outline: []
       physicsShape:
-      - - {x: 48, y: 16}
+      - - {x: 48, y: 4}
+        - {x: 36, y: 4}
         - {x: 27, y: -11}
         - {x: -27, y: -11}
-        - {x: -48, y: 16}
+        - {x: -36, y: 4}
+        - {x: -48, y: 4}
         - {x: -48, y: -16}
         - {x: 48, y: -16}
       tessellationDetail: 0

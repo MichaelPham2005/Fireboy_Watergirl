@@ -148,17 +148,34 @@ public class PulleySystem : NetworkBehaviour
 
     private void ProcessMovement(float deltaTime)
     {
-        int weightDiff = platformA.playersOnPlatform - platformB.playersOnPlatform;
-        float targetVelocity = weightDiff * moveSpeed;
+        float massDiff = platformA.totalMassOnPlatform - platformB.totalMassOnPlatform;
+        
+        // Giới hạn sự chênh lệch khối lượng ở mức thấp hơn (1.5) để ròng rọc không gia tốc quá lố
+        float clampedMassDiff = Mathf.Clamp(massDiff, -1.5f, 1.5f);
+        
+        // Nhân thêm 0.5f vào moveSpeed để tổng tốc độ di chuyển chậm lại một nửa
+        float targetVelocity = clampedMassDiff * (moveSpeed * 0.5f);
         
         currentVelocity = Mathf.Lerp(currentVelocity, targetVelocity, acceleration * deltaTime);
 
-        if (Mathf.Abs(currentVelocity) > 0.001f)
+        float nextOffset = currentOffset + currentVelocity * deltaTime;
+        
+        // Clamp offset and halt velocity if we hit the min/max limits
+        if (nextOffset >= maxOffsetPos)
         {
-            currentOffset += currentVelocity * deltaTime;
-            currentOffset = Mathf.Clamp(currentOffset, maxOffsetNeg, maxOffsetPos);
+            nextOffset = maxOffsetPos;
+            currentVelocity = 0f;
+        }
+        else if (nextOffset <= maxOffsetNeg)
+        {
+            nextOffset = maxOffsetNeg;
+            currentVelocity = 0f;
         }
 
+        currentOffset = nextOffset;
+
+        // Chỉ dùng MovePosition để di chuyển Kinematic Body một cách mượt mà tuyệt đối.
+        // Bỏ linearVelocity vì nó bị conflict với script di chuyển của nhân vật (nhân vật cũng đang set linearVelocity)
         rbA.MovePosition(new Vector2(rbA.position.x, startYA - currentOffset));
         rbB.MovePosition(new Vector2(rbB.position.x, startYB + currentOffset));
     }
