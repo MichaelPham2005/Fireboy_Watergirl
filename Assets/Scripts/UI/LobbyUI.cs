@@ -67,7 +67,21 @@ public class LobbyUI : MonoBehaviour
     {
         if (statusText != null)
         {
-            statusText.text = "Status: " + status.ToString();
+            if (status == ConnectionStatus.InLobby)
+            {
+                if (NetworkRunnerController.Instance.Runner != null && NetworkRunnerController.Instance.Runner.IsServer)
+                {
+                    statusText.text = "Room Code: " + NetworkRunnerController.Instance.CurrentRoomCode + "\nWaiting for player...";
+                }
+                else
+                {
+                    statusText.text = "Connected! Waiting for host to start...";
+                }
+            }
+            else
+            {
+                statusText.text = "Status: " + status.ToString();
+            }
         }
     }
 
