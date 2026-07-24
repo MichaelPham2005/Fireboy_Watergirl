@@ -48,6 +48,15 @@ public class StandardPlayerMovement : NetworkBehaviour
         rb = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
 
+        // If we are in the Main Menu (Home), we are just a preview character.
+        // Freeze physics so we don't fall off screen, and disable this script.
+        if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == "Home")
+        {
+            if (rb != null) rb.simulated = false;
+            enabled = false;
+            return;
+        }
+
         if (rb == null)
         {
             Debug.Log("No Rigidbody2D found. Disabling StandardPlayerMovement script for preview mode.");
