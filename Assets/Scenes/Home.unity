@@ -6091,11 +6091,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MainMenuManager
   mainPanel: {fileID: 1223708257}
   rankingPanel: {fileID: 1913300102}
-  customPanel: {fileID: 0}
+  customPanel: {fileID: 191695635}
   level1RankText: {fileID: 1629819620}
   level2RankText: {fileID: 886583095}
   level3RankText: {fileID: 47124116}
-  level4RankText: {fileID: 0}
+  level4RankText: {fileID: 104481625}
 --- !u!4 &1210813813
 Transform:
   m_ObjectHideFlags: 0

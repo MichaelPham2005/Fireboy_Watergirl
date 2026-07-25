@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 3663799561517452180}
   - component: {fileID: 378153145885982140}
   - component: {fileID: 3089859326805879308}
+  - component: {fileID: 234951735351093525}
   m_Layer: 5
   m_Name: Retry
   m_TagString: Untagged
@@ -346,6 +347,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &234951735351093525
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328696858744763142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8f57386c1d64a46a415e8ebd9eba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonHover
+  hoverScale: 1.1
+  cursorHandTexture: {fileID: 2800000, guid: a6d2f0b6a1b7c4cc4ac67b7f05e747ff, type: 3}
 --- !u!1 &1847113711034249087
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,6 +373,7 @@ GameObject:
   - component: {fileID: 8825805233882386430}
   - component: {fileID: 8674776886662430605}
   - component: {fileID: 3849796731082713302}
+  - component: {fileID: 5691158320529430211}
   m_Layer: 5
   m_Name: HomeButton
   m_TagString: Untagged
@@ -479,6 +495,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &5691158320529430211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1847113711034249087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8f57386c1d64a46a415e8ebd9eba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonHover
+  hoverScale: 1.1
+  cursorHandTexture: {fileID: 2800000, guid: a6d2f0b6a1b7c4cc4ac67b7f05e747ff, type: 3}
 --- !u!1 &2127437481285797102
 GameObject:
   m_ObjectHideFlags: 0
@@ -2349,6 +2379,7 @@ GameObject:
   - component: {fileID: 8672308332996027108}
   - component: {fileID: 320726411363159336}
   - component: {fileID: 7080643627857134899}
+  - component: {fileID: 4468383044625903263}
   m_Layer: 5
   m_Name: Btn_Settings
   m_TagString: Untagged
@@ -2470,6 +2501,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4468383044625903263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5238719917481702432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8f57386c1d64a46a415e8ebd9eba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonHover
+  hoverScale: 1.1
+  cursorHandTexture: {fileID: 2800000, guid: a6d2f0b6a1b7c4cc4ac67b7f05e747ff, type: 3}
 --- !u!1 &5297542687411707974
 GameObject:
   m_ObjectHideFlags: 0
@@ -2482,6 +2527,7 @@ GameObject:
   - component: {fileID: 4934034190196480941}
   - component: {fileID: 5865983290493291024}
   - component: {fileID: 4459002843939958036}
+  - component: {fileID: 7403094634078741979}
   m_Layer: 5
   m_Name: NextLevelButton
   m_TagString: Untagged
@@ -2603,6 +2649,20 @@ MonoBehaviour:
           m_StringArgument: Level_03
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7403094634078741979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5297542687411707974}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8f57386c1d64a46a415e8ebd9eba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonHover
+  hoverScale: 1.1
+  cursorHandTexture: {fileID: 2800000, guid: a6d2f0b6a1b7c4cc4ac67b7f05e747ff, type: 3}
 --- !u!1 &5406091979042998353
 GameObject:
   m_ObjectHideFlags: 0
@@ -2881,6 +2941,7 @@ GameObject:
   - component: {fileID: 6655075529699121803}
   - component: {fileID: 1984177229487989767}
   - component: {fileID: 8595337464099836290}
+  - component: {fileID: 4089840106992259709}
   m_Layer: 5
   m_Name: Home
   m_TagString: Untagged
@@ -3002,6 +3063,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &4089840106992259709
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6284435478839976979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8f57386c1d64a46a415e8ebd9eba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonHover
+  hoverScale: 1.1
+  cursorHandTexture: {fileID: 2800000, guid: a6d2f0b6a1b7c4cc4ac67b7f05e747ff, type: 3}
 --- !u!1 &6306654959507893343
 GameObject:
   m_ObjectHideFlags: 0
@@ -3547,6 +3622,7 @@ GameObject:
   - component: {fileID: 5437585161669264615}
   - component: {fileID: 8439105967919539013}
   - component: {fileID: 2684760354459310946}
+  - component: {fileID: 8876391600276288086}
   m_Layer: 5
   m_Name: RetryButton
   m_TagString: Untagged
@@ -3668,6 +3744,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8876391600276288086
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7372472135095932948}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8f57386c1d64a46a415e8ebd9eba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonHover
+  hoverScale: 1.1
+  cursorHandTexture: {fileID: 2800000, guid: a6d2f0b6a1b7c4cc4ac67b7f05e747ff, type: 3}
 --- !u!1 &7606659661323004188
 GameObject:
   m_ObjectHideFlags: 0
@@ -3680,6 +3770,7 @@ GameObject:
   - component: {fileID: 6093311814738604747}
   - component: {fileID: 1172787326733282380}
   - component: {fileID: 1006277241043849614}
+  - component: {fileID: 2377458093114503651}
   m_Layer: 5
   m_Name: Continue
   m_TagString: Untagged
@@ -3801,6 +3892,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &2377458093114503651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7606659661323004188}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8f57386c1d64a46a415e8ebd9eba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonHover
+  hoverScale: 1.1
+  cursorHandTexture: {fileID: 2800000, guid: a6d2f0b6a1b7c4cc4ac67b7f05e747ff, type: 3}
 --- !u!1 &7638277348718352688
 GameObject:
   m_ObjectHideFlags: 0
@@ -3813,6 +3918,7 @@ GameObject:
   - component: {fileID: 503793393921151002}
   - component: {fileID: 3648684215832386465}
   - component: {fileID: 2197042695486320229}
+  - component: {fileID: 8586502520599608595}
   m_Layer: 5
   m_Name: Home
   m_TagString: Untagged
@@ -3934,6 +4040,20 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &8586502520599608595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7638277348718352688}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8f57386c1d64a46a415e8ebd9eba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonHover
+  hoverScale: 1.1
+  cursorHandTexture: {fileID: 2800000, guid: a6d2f0b6a1b7c4cc4ac67b7f05e747ff, type: 3}
 --- !u!1 &7845794915004833651
 GameObject:
   m_ObjectHideFlags: 0
@@ -4573,6 +4693,7 @@ GameObject:
   - component: {fileID: 3112097762150485843}
   - component: {fileID: 1965751714260936056}
   - component: {fileID: 5591331901371663946}
+  - component: {fileID: 3669232544764613019}
   m_Layer: 5
   m_Name: Retry
   m_TagString: Untagged
@@ -4694,3 +4815,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &3669232544764613019
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8961126916746343162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8f57386c1d64a46a415e8ebd9eba37, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MenuButtonHover
+  hoverScale: 1.1
+  cursorHandTexture: {fileID: 2800000, guid: a6d2f0b6a1b7c4cc4ac67b7f05e747ff, type: 3}
