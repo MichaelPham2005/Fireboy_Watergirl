@@ -190,6 +190,8 @@ public class StandardPlayerMovement : NetworkBehaviour
 
         if (GameModeManager.CurrentMode == GameModeManager.GameMode.LocalCoop)
         {
+            if (GameManager.Instance != null && !GameManager.Instance.IsGameActive) return;
+            
             UpdateGroundStateLocal();
 
             float moveInput = GetHorizontalInputLocal();
@@ -396,6 +398,13 @@ public class StandardPlayerMovement : NetworkBehaviour
 
         // Only the Host (State Authority) runs the actual physics simulation.
         if (!HasStateAuthority) return;
+
+        if (GameManager.Instance != null && !GameManager.Instance.IsGameActive)
+        {
+            // If the game is lost (someone died) or won, stop all networked physics movement immediately
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+            return;
+        }
 
         if (jumpTimer > 0f) jumpTimer -= Runner.DeltaTime;
         

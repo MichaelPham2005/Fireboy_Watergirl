@@ -281,11 +281,10 @@ public class UIManager : MonoBehaviour
 
         if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
         {
-            // Use Fusion's networked scene loading so both players reload together
-            var controller = NetworkRunnerController.Instance;
-            if (controller != null && controller.Runner != null && controller.Runner.IsServer)
+            // Use the new RequestLoadScene which routes correctly through NetworkRunnerController
+            if (GameManager.Instance != null)
             {
-                controller.Runner.LoadScene(SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex));
+                GameManager.Instance.RequestLoadScene(SceneManager.GetActiveScene().buildIndex);
             }
         }
         else
@@ -315,18 +314,17 @@ public class UIManager : MonoBehaviour
 
         if (GameModeManager.CurrentMode == GameModeManager.GameMode.OnlineMultiplayer)
         {
-            var controller = NetworkRunnerController.Instance;
-            if (controller != null && controller.Runner != null && controller.Runner.IsServer)
+            if (GameManager.Instance != null)
             {
                 int nextIndex = SceneUtility.GetBuildIndexByScenePath(nextLevelName);
                 if (nextIndex >= 0)
                 {
-                    controller.Runner.LoadScene(SceneRef.FromIndex(nextIndex));
+                    GameManager.Instance.RequestLoadScene(nextIndex);
                 }
                 else
                 {
-                    // Fallback: try loading by name through Fusion
-                    controller.Runner.LoadScene(SceneRef.FromIndex(SceneManager.GetActiveScene().buildIndex + 1));
+                    // Fallback
+                    GameManager.Instance.RequestLoadScene(SceneManager.GetActiveScene().buildIndex + 1);
                 }
             }
         }

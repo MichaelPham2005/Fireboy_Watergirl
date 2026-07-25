@@ -59,8 +59,17 @@ public class Gem : NetworkBehaviour
             if (isRedGem) GameManager.Instance.CollectRedGem();
             else GameManager.Instance.CollectBlueGem();
         }
-        
-        // Despawn network object safely
-        Runner.Despawn(Object);
+        // We do NOT Despawn immediately, because despawning a Scene Object in the same tick 
+        // prevents the IsCollectedNetwork state from replicating to the client, leaving the gem visible!
+        // Instead, we let the network state replicate and use Render() to hide it on all clients.
+    }
+
+    public override void Render()
+    {
+        // Visually hide the gem on both Host and Client when it is collected
+        if (IsCollectedNetwork && gameObject.activeSelf)
+        {
+            gameObject.SetActive(false);
+        }
     }
 }

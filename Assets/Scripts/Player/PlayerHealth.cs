@@ -157,4 +157,16 @@ public class PlayerHealth : NetworkBehaviour
         Debug.Log(gameObject.name + " evaporated!");
         if (rb != null) rb.simulated = false;
     }
+
+    // Proxy RPC: Client calls this on any PlayerHealth to ask the Host to load a scene.
+    // This works because PlayerHealth has a real NetworkObject that Fusion can route RPCs through.
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_RequestSceneLoad(int buildIndex)
+    {
+        var controller = Network.NetworkRunnerController.Instance;
+        if (controller != null && controller.Runner != null && controller.Runner.IsServer)
+        {
+            controller.Runner.LoadScene(SceneRef.FromIndex(buildIndex));
+        }
+    }
 }
