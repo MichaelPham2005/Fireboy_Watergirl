@@ -9,6 +9,9 @@ public class MainMenuManager : MonoBehaviour
     public GameObject mainPanel;
     public GameObject rankingPanel;
     public GameObject customPanel;
+    public GameObject lobbyPanel;
+    
+    public static MainMenuManager Instance;
 
     [Header("Ranking UI Elements")]
     public TextMeshProUGUI level1RankText;
@@ -16,8 +19,13 @@ public class MainMenuManager : MonoBehaviour
     public TextMeshProUGUI level3RankText;
     public TextMeshProUGUI level4RankText;
 
+    private GameObject lockPanel;
+
     private void Start()
     {
+        Instance = this;
+        CreateLockPanel();
+
         // Ensure only the main panel is open at start
         ShowMainPanel();
 
@@ -114,6 +122,7 @@ public class MainMenuManager : MonoBehaviour
         if (mainPanel != null) mainPanel.SetActive(false);
         if (rankingPanel != null) rankingPanel.SetActive(true);
         if (customPanel != null) customPanel.SetActive(false);
+        if (lobbyPanel != null) lobbyPanel.SetActive(false);
 
         UpdateRankText(level1RankText, "Level_01");
         UpdateRankText(level2RankText, "Level_02");
@@ -126,6 +135,7 @@ public class MainMenuManager : MonoBehaviour
         if (mainPanel != null) mainPanel.SetActive(false);
         if (rankingPanel != null) rankingPanel.SetActive(false);
         if (customPanel != null) customPanel.SetActive(true);
+        if (lobbyPanel != null) lobbyPanel.SetActive(false);
     }
 
     public void ShowMainPanel()
@@ -133,12 +143,64 @@ public class MainMenuManager : MonoBehaviour
         if (mainPanel != null) mainPanel.SetActive(true);
         if (rankingPanel != null) rankingPanel.SetActive(false);
         if (customPanel != null) customPanel.SetActive(false);
+        if (lobbyPanel != null) lobbyPanel.SetActive(false);
+        UpdateMainPanelVisuals();
+    }
+
+    private void UpdateMainPanelVisuals()
+    {
+        if (mainPanel == null) return;
+        TextMeshProUGUI[] texts = mainPanel.GetComponentsInChildren<TextMeshProUGUI>(true);
+        for (int i = 1; i <= 4; i++)
+        {
+            string levelStr = "LEVEL " + i;
+            string sceneName = "Level_0" + i;
+            bool isUnlocked = IsLevelUnlocked(sceneName);
+            
+            foreach (var txt in texts)
+            {
+                if (txt.text.Contains(levelStr))
+                {
+                    if (isUnlocked)
+                    {
+                        txt.text = "<color=#FFBF00>" + levelStr + "</color>";
+                    }
+                    else
+                    {
+                        txt.text = "<color=#808080>" + levelStr + "</color>";
+                    }
+                }
+            }
+        }
     }
 
     private void UpdateRankText(TextMeshProUGUI textElement, string levelName)
     {
         if (textElement != null)
         {
+            bool isUnlocked = IsLevelUnlocked(levelName);
+
+            // Update parent container text color for visual lock feedback
+            TextMeshProUGUI parentText = textElement.transform.parent.GetComponent<TextMeshProUGUI>();
+            if (parentText != null)
+            {
+                string baseName = "LEVEL " + levelName.Substring(levelName.Length - 1);
+                if (isUnlocked)
+                {
+                    parentText.text = "<color=#FFBF00>" + baseName + "</color>";
+                }
+                else
+                {
+                    parentText.text = "<color=#808080>" + baseName + "</color>";
+                }
+            }
+
+            if (!isUnlocked)
+            {
+                textElement.text = "-";
+                return;
+            }
+
             LevelData data = SaveSystem.LoadLevelData(levelName);
             if (data.bestRank == 99)
             {
@@ -159,15 +221,128 @@ public class MainMenuManager : MonoBehaviour
 
     public void GoToLevel(string levelName)
     {
+        if (!IsLevelUnlocked(levelName))
+        {
+            if (lockPanel != null)
+            {
+                lockPanel.SetActive(true);
+            }
+            return;
+        }
+
         // By default, if they click a level from the level select, it's local co-op
         Network.GameModeManager.CurrentMode = Network.GameModeManager.GameMode.LocalCoop;
         SceneManager.LoadScene(levelName);
     }
 
+    private bool IsLevelUnlocked(string levelName)
+    {
+        if (levelName == "Level_01") return true;
+
+        int currentLevelNum;
+        if (levelName.Contains("_"))
+        {
+            if (int.TryParse(levelName.Substring(levelName.IndexOf('_') + 1), out currentLevelNum))
+            {
+                if (currentLevelNum > 1)
+                {
+                    string previousLevel = string.Format("Level_{0:00}", currentLevelNum - 1);
+                    LevelData prevData = SaveSystem.LoadLevelData(previousLevel);
+                    if (prevData.bestRank == 99)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    private void CreateLockPanel()
+    {
+        Canvas canvas = FindFirstObjectByType<Canvas>();
+        if (canvas != null)
+        {
+            lockPanel = new GameObject("LockPanel");
+            lockPanel.transform.SetParent(canvas.transform, false);
+            
+            // Add Image for background overlay
+            Image bg = lockPanel.AddComponent<Image>();
+            bg.color = new Color(0, 0, 0, 0.85f);
+            
+            RectTransform rect = lockPanel.GetComponent<RectTransform>();
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.sizeDelta = Vector2.zero;
+            rect.anchoredPosition = Vector2.zero;
+
+            // Add Window Box
+            GameObject windowObj = new GameObject("WindowBox");
+            windowObj.transform.SetParent(lockPanel.transform, false);
+            Image windowBg = windowObj.AddComponent<Image>();
+            windowBg.color = new Color(0.1f, 0.1f, 0.1f, 1f);
+            RectTransform windowRect = windowObj.GetComponent<RectTransform>();
+            windowRect.sizeDelta = new Vector2(700, 400);
+            windowRect.anchoredPosition = Vector2.zero;
+
+            // Add Text
+            GameObject textObj = new GameObject("LockText");
+            textObj.transform.SetParent(windowObj.transform, false);
+            TextMeshProUGUI text = textObj.AddComponent<TextMeshProUGUI>();
+            text.text = "This level is locked!\nYou must complete previous levels first.";
+            text.alignment = TextAlignmentOptions.Center;
+            text.fontSize = 45;
+            text.color = Color.white;
+            text.enableWordWrapping = true;
+            
+            RectTransform textRect = textObj.GetComponent<RectTransform>();
+            textRect.sizeDelta = new Vector2(600, 200);
+            textRect.anchoredPosition = new Vector2(0, 60);
+            
+            // Try to match font
+            TextMeshProUGUI refText = canvas.GetComponentInChildren<TextMeshProUGUI>(true);
+            if (refText != null)
+            {
+                text.font = refText.font;
+                text.fontSharedMaterial = refText.fontSharedMaterial;
+            }
+
+            // Add Close Button
+            GameObject btnObj = new GameObject("CloseButton");
+            btnObj.transform.SetParent(windowObj.transform, false);
+            Image btnImg = btnObj.AddComponent<Image>();
+            btnImg.color = new Color(0.3f, 0.3f, 0.3f, 1f);
+            RectTransform btnRect = btnObj.GetComponent<RectTransform>();
+            btnRect.sizeDelta = new Vector2(250, 80);
+            btnRect.anchoredPosition = new Vector2(0, -100);
+
+            Button btn = btnObj.AddComponent<Button>();
+            btn.onClick.AddListener(() => lockPanel.SetActive(false));
+
+            GameObject btnTextObj = new GameObject("BtnText");
+            btnTextObj.transform.SetParent(btnObj.transform, false);
+            TextMeshProUGUI btnText = btnTextObj.AddComponent<TextMeshProUGUI>();
+            btnText.text = "OK";
+            btnText.alignment = TextAlignmentOptions.Center;
+            btnText.fontSize = 40;
+            btnText.color = Color.white;
+            if (refText != null)
+            {
+                btnText.font = refText.font;
+                btnText.fontSharedMaterial = refText.fontSharedMaterial;
+            }
+
+            lockPanel.SetActive(false);
+        }
+    }
+
     public void PlayOnline()
     {
         Network.GameModeManager.CurrentMode = Network.GameModeManager.GameMode.OnlineMultiplayer;
-        SceneManager.LoadScene("LobbyScene");
+        if (mainPanel != null) mainPanel.SetActive(false);
+        if (rankingPanel != null) rankingPanel.SetActive(false);
+        if (customPanel != null) customPanel.SetActive(false);
+        if (lobbyPanel != null) lobbyPanel.SetActive(true);
     }
 
     // Helper methods for dynamic scene discovery

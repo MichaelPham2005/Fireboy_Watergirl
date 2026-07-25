@@ -202,14 +202,35 @@ namespace Network
             // Once we have 2 players, the host loads the game level!
             if (runner.IsServer && player != runner.LocalPlayer)
             {
-                int levelIndex = SceneUtility.GetBuildIndexByScenePath("Assets/Scenes/Level_01.unity");
+                // Find highest unlocked level
+                int highestLevel = 1;
+                for (int i = 1; i <= 3; i++)
+                {
+                    string prevLevel = $"Level_{i:00}";
+                    LevelData data = SaveSystem.LoadLevelData(prevLevel);
+                    if (data.bestRank != 99)
+                    {
+                        highestLevel = i + 1;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                string levelToLoad = $"Level_{highestLevel:00}";
+                string scenePath = $"Assets/Scenes/{levelToLoad}.unity";
+
+                int levelIndex = SceneUtility.GetBuildIndexByScenePath(scenePath);
                 if (levelIndex >= 0)
                 {
                     runner.LoadScene(SceneRef.FromIndex(levelIndex));
                 }
                 else
                 {
-                    Debug.LogError("Level_01 not found in Build Settings! Make sure it's added. (Expected path: Assets/Scenes/Level_01.unity)");
+                    Debug.LogError($"{levelToLoad} not found in Build Settings! Make sure it's added. (Expected path: {scenePath})");
+                    // Fallback to Level_01
+                    int fallbackIndex = SceneUtility.GetBuildIndexByScenePath("Assets/Scenes/Level_01.unity");
+                    if (fallbackIndex >= 0) runner.LoadScene(SceneRef.FromIndex(fallbackIndex));
                 }
             }
         }
