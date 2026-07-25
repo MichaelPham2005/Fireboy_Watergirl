@@ -29,6 +29,9 @@ public class MainMenuManager : MonoBehaviour
         // Ensure only the main panel is open at start
         ShowMainPanel();
 
+        // Start playing the menu BGM
+        AudioManager.Instance?.PlayMenuMusic();
+
         // 1. Programmatically hook up the ranking button onClick event
         GameObject rankingBtnGo = GameObject.Find("RankningButton");
         if (rankingBtnGo == null) rankingBtnGo = GameObject.Find("RankingButton");
