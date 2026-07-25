@@ -33,19 +33,34 @@ public class Gem : NetworkBehaviour
             }
             else
             {
-                // In Online mode, only the host processes gem collection to prevent duplicates
-                if (HasStateAuthority && !IsCollectedNetwork)
+                // In Online mode, the player with local control detects the collision and requests collection
+                NetworkObject no = collision.gameObject.GetComponent<NetworkObject>();
+                if (no != null && no.HasInputAuthority)
                 {
-                    IsCollectedNetwork = true;
-                    if (GameManager.Instance != null)
-                    {
-                        if (isRedGem) GameManager.Instance.CollectRedGem();
-                        else GameManager.Instance.CollectBlueGem();
-                    }
-                    // Despawn network object
-                    Runner.Despawn(Object);
+                    RPC_RequestCollectGem();
+                }
+                // Host also requests if they have state authority and the player touched it
+                else if (HasStateAuthority)
+                {
+                    RPC_RequestCollectGem();
                 }
             }
         }
+    }
+
+    [Rpc(RpcSources.All, RpcTargets.StateAuthority)]
+    public void RPC_RequestCollectGem()
+    {
+        if (IsCollectedNetwork) return;
+        
+        IsCollectedNetwork = true;
+        if (GameManager.Instance != null)
+        {
+            if (isRedGem) GameManager.Instance.CollectRedGem();
+            else GameManager.Instance.CollectBlueGem();
+        }
+        
+        // Despawn network object safely
+        Runner.Despawn(Object);
     }
 }

@@ -5,11 +5,13 @@ using UnityEngine;
 public class LevelData
 {
     public List<float> topTimes = new List<float>();
-    public int bestRank = 99; // 99 means unranked/unplayed. 1 is best.
+    public int bestRank = SaveSystem.UNPLAYED_RANK; // 99 means unranked/unplayed. 1 is best.
 }
 
 public static class SaveSystem
 {
+    public const int UNPLAYED_RANK = 99;
+
     public static void SaveTime(string levelName, float time)
     {
         LevelData data = LoadLevelData(levelName);

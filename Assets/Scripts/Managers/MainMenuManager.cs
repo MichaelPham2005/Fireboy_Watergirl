@@ -205,7 +205,7 @@ public class MainMenuManager : MonoBehaviour
             }
 
             LevelData data = SaveSystem.LoadLevelData(levelName);
-            if (data.bestRank == 99)
+            if (data.bestRank == SaveSystem.UNPLAYED_RANK)
             {
                 textElement.text = "-"; // Unplayed
             }
@@ -242,23 +242,19 @@ public class MainMenuManager : MonoBehaviour
     {
         if (levelName == "Level_01") return true;
 
-        int currentLevelNum;
         if (levelName.Contains("_"))
         {
-            if (int.TryParse(levelName.Substring(levelName.IndexOf('_') + 1), out currentLevelNum))
+            if (int.TryParse(levelName.Substring(levelName.IndexOf('_') + 1), out int currentLevelNum))
             {
                 if (currentLevelNum > 1)
                 {
                     string previousLevel = string.Format("Level_{0:00}", currentLevelNum - 1);
                     LevelData prevData = SaveSystem.LoadLevelData(previousLevel);
-                    if (prevData.bestRank == 99)
-                    {
-                        return false;
-                    }
+                    return prevData.bestRank != SaveSystem.UNPLAYED_RANK;
                 }
             }
         }
-        return true;
+        return false;
     }
 
     private void CreateLockPanel()
