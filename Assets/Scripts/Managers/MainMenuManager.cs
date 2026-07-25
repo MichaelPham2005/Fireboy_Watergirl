@@ -345,6 +345,15 @@ public class MainMenuManager : MonoBehaviour
         if (lobbyPanel != null) lobbyPanel.SetActive(true);
     }
 
+    public void GoBackFromOnline()
+    {
+        if (Network.NetworkRunnerController.Instance != null && Network.NetworkRunnerController.Instance.Status != Network.ConnectionStatus.Disconnected)
+        {
+            Network.NetworkRunnerController.Instance.Shutdown();
+        }
+        ShowMainPanel();
+    }
+
     // Helper methods for dynamic scene discovery
     private GameObject FindChildGameObject(GameObject parent, string name)
     {
