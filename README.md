@@ -18,6 +18,25 @@
 
 ---
 
+## 👨‍🎓 Student Information
+
+| # | Full Name | Student ID |
+|:-:|-----------|:----------:|
+| 1 | Huỳnh Trấn Uy | 23125047 |
+| 2 | Trần Mỹ An | 23125049 |
+| 3 | Nguyễn Hoàng Gia Hân | 23125055 |
+| 4 | Phạm Bảo Kha | 23125058 |
+
+---
+
+## 🎮 Brief Introduction
+
+**Fireboy & Watergirl** is a **2D cooperative puzzle-platformer** built in **Unity**, inspired by the classic browser game of the same name. The game reimagines Fireboy and Watergirl as two elemental lovers — opposites bound by fate — who must work together to overcome environmental hazards, solve physics-based puzzles, and defeat enemies across 4 handcrafted temple levels.
+
+The game supports both **local co-op** (two players sharing one keyboard) and **online multiplayer** (via Photon Fusion 2 with room codes), featuring a complete audio system, time-based ranking, character customization, and a polished UI/UX — all deployed as a **WebGL** application on **Vercel**.
+
+---
+
 ## 📖 Story
 
 > *Inspired by the classic Fireboy & Watergirl browser game, our Unity 2D project reimagines the duo as lovers — opposites bound by fate.*
@@ -297,7 +316,82 @@ Fireboy_Watergirl/
 
 ---
 
+## 🖥️ Unity Version
+
+| Component | Version |
+|-----------|:-------:|
+| **Unity Editor** | `6000.3.16f1` (Unity 6) |
+| **Render Pipeline** | Universal Render Pipeline (URP) `17.3.0` |
+| **Input System** | `1.19.0` |
+| **2D Animation** | `13.0.5` |
+| **2D Tilemap Extras** | `6.0.2` |
+| **TextMesh Pro (uGUI)** | `2.0.0` |
+| **Timeline** | `1.8.12` |
+| **Photon Fusion 2** | Integrated via SDK |
+| **Target Platform** | WebGL (deployed on Vercel) |
+
+---
+
+## 📚 Resource References
+
+### 🎨 Character & Environment Sprites
+
+| Asset | Source |
+|-------|--------|
+| **Character — Fireboy & Watergirl Sprites** | [The Spriters Resource — Forest Temple Asset](https://www.spritersresource.com/browser_games/fireboyandwatergirltheforesttemple/asset/217382/) |
+| **Scarf (Customization)** | [Flaticon — Scarf Icon](https://www.flaticon.com/free-icon/scarf_8907541?term=scarf&page=1&position=22&origin=search&related_id=8907541) |
+| **Tie (Customization)** | [Flaticon — Tie Icon](https://www.flaticon.com/free-icon/tie_8155600?term=tie&page=1&position=86&origin=search&related_id=8155600) |
+| **Ghost Enemy** | [tehemlo — Free Ghost Sprite Sheet (itch.io)](https://tehemlo.itch.io/free-ghost-sprite-sheet?download) |
+| **Stalactite** | AI-generated using **Google Gemini** |
+
+### 🏛️ Level Designs
+
+| Asset | Source |
+|-------|--------|
+| **Background, Doors, Gems, Seesaw, Switch, Platform, etc.** | [Gamefroot — Remix #531696](https://make.gamefroot.com/games/remix/531696) *(Sprites extracted via browser DevTools → Sources)* |
+
+### 🤖 AI Tool Usage
+
+| Tool | Usage |
+|------|-------|
+| **ChatGPT** | Isolating sprite components for animation rigging and collision setup |
+| **Google Gemini** | Generating stalactite sprite; isolating sprite components |
+| **AI-Generated Art** | Background of Home Scene, Lose/Win/Pause panel placeholders, Timer panel placeholder |
+
+### 🎵 Soundtrack
+
+| Asset | Source |
+|-------|--------|
+| **Fireboy and Watergirl OST** | [KHInsider — Fireboy and Watergirl Soundtrack](https://downloads.khinsider.com/game-soundtracks/album/fireboy-and-watergirl) |
+
+### 🔗 Game References
+
+| Reference | Link |
+|-----------|------|
+| **Gameplay Reference (YouTube)** | [youtube.com/watch?v=uY_Z52jeVF](https://www.youtube.com/watch?v=uY_Z52jeVF) |
+| **Original Game (Cool Math Games)** | [coolmathgames.com — Fireboy and Watergirl](https://www.coolmathgames.com/0-fireboy-and-water-girl-in-the-forest-temple) |
+
+### 📦 Unity Packages & Documentation
+
+| Package | Documentation |
+|---------|--------------|
+| **Unity 2D Tilemap** | [Unity Tilemap Docs](https://docs.unity3d.com/Manual/class-Tilemap.html) |
+| **Universal Render Pipeline (URP)** | [Unity URP Docs](https://docs.unity3d.com/Packages/com.unity.render-pipelines.universal@17.0/manual/index.html) |
+| **Photon Fusion 2** | [Photon Fusion Docs](https://doc.photonengine.com/fusion/current/getting-started/fusion-intro) |
+| **Unity Input System** | [Input System Docs](https://docs.unity3d.com/Packages/com.unity.inputsystem@1.19/manual/index.html) |
+| **TextMesh Pro** | [TMP Docs](https://docs.unity3d.com/Manual/com.unity.textmeshpro.html) |
+| **Custom HLSL Shader** | Custom-written liquid wave shader (`WaterChopURP`) for URP |
+
+---
+
 ## 👥 Team
+
+| Member | Student ID | Contribution |
+|--------|:----------:|:------------:|
+| Huỳnh Trấn Uy | 23125047 | — |
+| Trần Mỹ An | 23125049 | — |
+| Nguyễn Hoàng Gia Hân | 23125055 | — |
+| Phạm Bảo Kha | 23125058 | — |
 
 Built with ❤️ and 🔥 as a Unity 2D game development project.
 
