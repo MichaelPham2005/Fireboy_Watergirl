@@ -396,9 +396,6 @@ public class StandardPlayerMovement : NetworkBehaviour
     {
         if (GameModeManager.CurrentMode != GameModeManager.GameMode.OnlineMultiplayer) return;
 
-        // Only the Host (State Authority) runs the actual physics simulation.
-        if (!HasStateAuthority) return;
-
         if (GameManager.Instance != null && !GameManager.Instance.IsGameActive)
         {
             // If the game is lost (someone died) or won, stop all networked physics movement immediately

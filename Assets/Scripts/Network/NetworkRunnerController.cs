@@ -34,6 +34,8 @@ namespace Network
         public event Action<PlayerRef> OnPlayerJoinedEvent;
         public event Action<PlayerRef> OnPlayerLeftEvent;
 
+        private bool _localJumpPressed = false;
+
         private void Awake()
         {
             if (Instance == null)
@@ -232,6 +234,27 @@ namespace Network
             }
         }
 
+        private void Update()
+        {
+            if (GameModeManager.CurrentMode != GameModeManager.GameMode.OnlineMultiplayer) return;
+
+            if (UnityEngine.InputSystem.Keyboard.current != null)
+            {
+                var kb = UnityEngine.InputSystem.Keyboard.current;
+                if (kb.upArrowKey.wasPressedThisFrame || kb.wKey.wasPressedThisFrame)
+                {
+                    _localJumpPressed = true;
+                }
+            }
+            else
+            {
+                if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W))
+                {
+                    _localJumpPressed = true;
+                }
+            }
+        }
+
         public void OnInput(NetworkRunner runner, NetworkInput input) 
         {
             if (GameModeManager.CurrentMode != GameModeManager.GameMode.OnlineMultiplayer) return;
@@ -244,16 +267,15 @@ namespace Network
                 
                 if (kb.leftArrowKey.isPressed || kb.aKey.isPressed) data.Horizontal = -1f;
                 else if (kb.rightArrowKey.isPressed || kb.dKey.isPressed) data.Horizontal = 1f;
-
-                if (kb.upArrowKey.isPressed || kb.wKey.isPressed) data.JumpPressed = true;
             }
             else
             {
                 if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.A)) data.Horizontal = -1f;
                 else if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D)) data.Horizontal = 1f;
-
-                if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.W)) data.JumpPressed = true;
             }
+
+            data.JumpPressed = _localJumpPressed;
+            _localJumpPressed = false;
 
             input.Set(data);
         }
