@@ -353,6 +353,29 @@ public class MainMenuManager : MonoBehaviour
         ShowMainPanel();
     }
 
+    private void Update()
+    {
+        // 🧪 TESTING CHEAT: Press 'U' to instantly unlock all levels
+        // This is much easier than trying to edit the binary IndexedDB blob in the browser!
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            UnlockAllLevels();
+        }
+    }
+
+    private void UnlockAllLevels()
+    {
+        // Rank 1 means 'A' Rank. This tells the game you completed the levels.
+        SaveSystem.SaveRank("Level_01", 1);
+        SaveSystem.SaveRank("Level_02", 1);
+        SaveSystem.SaveRank("Level_03", 1);
+        SaveSystem.SaveRank("Level_04", 1);
+        
+        // Refresh the UI to show the yellow unlocked text
+        ShowMainPanel();
+        Debug.Log("Cheat Activated: All levels unlocked!");
+    }
+
     // Helper methods for dynamic scene discovery
     private GameObject FindChildGameObject(GameObject parent, string name)
     {
